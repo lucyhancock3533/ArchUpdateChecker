@@ -9,4 +9,4 @@ Requirements:
 * pacman package manager
 * A bash like default shell
 
-To run, execute auc.py as root, or using sudo/gksudo.
+To run, execute auc.py as root, or using sudo/gksudo. If not ran as root, the pacman database will not be updated.
