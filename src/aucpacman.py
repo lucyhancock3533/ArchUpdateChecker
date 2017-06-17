@@ -1,20 +1,11 @@
 #! /usr/bin/python3
 
 import subprocess, os, sys
-from tkinter import *
-from tkinter import messagebox
 
-def syncDB():
+def syncDB(): # Invoke pacman and update package database
     syncProcess = subprocess.Popen(["/usr/bin/pacman", "-Syy"])
     syncProcess.wait()
-    if syncProcess.returncode == 0:
-        print("Database syncronised")
-    else:
-        print("Failed to syncronise DB")
-        quit(1)
 
-def getUpdates():
+def getUpdateCount(): # Get number of packages needing updates
     updates = os.popen("pacman -Qnu | wc -l")
-    updCount = int(updates.read())
-    print(str(updCount) + " updates are available")
-    return updCount
+    return int(updates.read())
