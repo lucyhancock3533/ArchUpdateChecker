@@ -9,3 +9,7 @@ def syncDB(): # Invoke pacman and update package database
 def getUpdateCount(): # Get number of packages needing updates
     updates = os.popen("pacman -Qnu | wc -l")
     return int(updates.read())
+
+def runUpdates(): # Run pacman and update system
+    updateProcess = subprocess.Popen(["/usr/bin/pacman", "-Su"])
+    updateProcess.wait()

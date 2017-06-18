@@ -12,8 +12,8 @@ class UpdateNotificationDialog(Gtk.Window): # Dialog for displaying message to u
         label = Gtk.Label() # Create and set label to input
         label.set_markup(text)
         grid.attach(label, 0, 0, 2, 1)
-        updateButton = Gtk.Button("Update")
-        viewButton = Gtk.Button("View")
+        updateButton = Gtk.Button("Update") # Add update button
+        viewButton = Gtk.Button("View") # Add view updates button
         grid.attach(viewButton, 0, 1, 1, 1)
         grid.attach(updateButton, 1, 1, 1, 1)
 
