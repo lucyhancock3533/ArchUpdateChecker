@@ -1,6 +1,7 @@
 #! /usr/bin/python3
 
 from gi.repository import Gtk
+from aucpacman import getUpdates
 
 class UpdateNotificationDialog(Gtk.Window): # Dialog for displaying message to user
     def __init__(self, text):
@@ -12,8 +13,13 @@ class UpdateNotificationDialog(Gtk.Window): # Dialog for displaying message to u
         grid.attach(label, 0, 0, 2, 1)
         updateButton = Gtk.Button("Update") # Add update button
         viewButton = Gtk.Button("View") # Add view updates button
+        viewButton.connect("clicked", self.launchViewWindow)
         grid.attach(viewButton, 0, 1, 1, 1)
         grid.attach(updateButton, 1, 1, 1, 1)
+
+    def launchViewWindow(self, button):
+        window = UpdateViewWindow(getUpdates())
+        window.show_all()
 
 class UpdateViewWindow(Gtk.Window):
     def __init__(self, updates):
