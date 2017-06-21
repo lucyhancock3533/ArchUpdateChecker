@@ -14,11 +14,16 @@ class UpdateNotificationDialog(Gtk.Window): # Dialog for displaying message to u
         updateButton = Gtk.Button("Update") # Add update button
         viewButton = Gtk.Button("View") # Add view updates button
         viewButton.connect("clicked", self.launchViewWindow)
+        updateButton.connect("clicked", self.launchUpdateWindow)
         grid.attach(viewButton, 0, 1, 1, 1)
         grid.attach(updateButton, 1, 1, 1, 1)
 
     def launchViewWindow(self, button):
         window = UpdateViewWindow(getUpdates())
+        window.show_all()
+
+    def launchUpdateWindow(self, button):
+        window = UpdateStatusWindow()
         window.show_all()
 
 class UpdateViewWindow(Gtk.Window):
@@ -33,5 +38,16 @@ class UpdateViewWindow(Gtk.Window):
         self.add(listbox)
 
 class UpdateStatusWindow(Gtk.Window):
-    def __init(self):
-        print()
+    def __init__(self):
+        Gtk.Window.__init__(self, title="AUC") # Create window
+        self.set_default_size(800, 600) # Set window size
+        scrolledwindow = Gtk.ScrolledWindow() # Create scrolled container
+        scrolledwindow.set_hexpand(True)
+        scrolledwindow.set_vexpand(True)
+        self.add(scrolledwindow)
+        self.textview = Gtk.TextView() # Create text view
+        self.textbuffer = self.textview.get_buffer()
+        self.textview.set_editable(False)
+        self.textview.set_cursor_visible(False)
+        self.textview.set_wrap_mode(2)
+        scrolledwindow.add(self.textview)
