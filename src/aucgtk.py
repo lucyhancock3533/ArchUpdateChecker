@@ -4,9 +4,20 @@
 import threading
 from gi.repository import GLib, Gtk, GObject
 from aucpacman import getUpdates, runUpdates
+from subprocess import CalledProcessError
+
+class MessageNotificationWindow(Gtk.Window):
+    """Window for displaying message to user"""
+    def __init__(self, text):
+        Gtk.Window.__init__(self, title="AUC") # Create window
+        grid = Gtk.Grid() # Create component grid
+        self.add(grid)
+        label = Gtk.Label() # Create and set label to input
+        label.set_markup(text)
+        grid.attach(label, 0, 0, 2, 1)
 
 class UpdateNotificationWindow(Gtk.Window):
-    """Window for displaying message to user"""
+    """Window for displaying update message to user"""
     def __init__(self, text):
         Gtk.Window.__init__(self, title="AUC") # Create window
         grid = Gtk.Grid() # Create component grid
@@ -22,8 +33,12 @@ class UpdateNotificationWindow(Gtk.Window):
         grid.attach(updateButton, 1, 1, 1, 1)
 
     def launchViewWindow(self, button):
-        window = UpdateViewWindow(getUpdates())
-        window.show_all()
+        try:
+            window = UpdateViewWindow(getUpdates())
+            window.show_all()
+        except CalledProcessError:
+            msg = MessageNotificationWindow("<big>No updates available to view</big>")
+            msg.show_all()
 
     def launchUpdateWindow(self, button):
         window = UpdateStatusWindow(self)
@@ -64,7 +79,19 @@ class UpdateStatusWindow(Gtk.Window):
         self.textbuffer.insert_at_cursor(progress) # Add progress to text view
         self.textview.scroll_to_mark(self.textbuffer.get_insert(), 0.0, True, 0.5, 0.5)
 
+    def finishUpdates(self, parent):
+        msg = MessageNotificationWindow("<big>Updates are complete</big>")
+        msg.show_all()
+        msg.connect("delete-event", Gtk.main_quit)
+        self.hide()
+        parent.hide()
+
     def doUpdates(self):
-        updates = runUpdates() # Run updates
-        for line in updates.stdout: # Update text view
-            GLib.idle_add(self.updateProgress, line.decode())
+        try:
+            updates = runUpdates() # Run updates
+            for line in updates.stdout: # Update text view
+                GLib.idle_add(self.updateProgress, line.decode())
+            GLib.idle_add(self.finishUpdates, self.super)
+        except CalledProcessError:
+            msg = MessageNotificationWindow("<big>Failed to install updates</big>")
+            msg.show_all()
