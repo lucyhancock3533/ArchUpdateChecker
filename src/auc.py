@@ -1,4 +1,5 @@
 #! /usr/bin/python3
+"""AUC Main module, syncs, checks for updates, and alerts user."""
 
 import gi
 gi.require_version('Gtk', '3.0')
