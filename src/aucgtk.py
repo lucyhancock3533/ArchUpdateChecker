@@ -1,7 +1,8 @@
 #! /usr/bin/python3
 
-from gi.repository import Gtk
-from aucpacman import getUpdates
+import threading
+from gi.repository import GLib, Gtk, GObject
+from aucpacman import getUpdates, runUpdates
 
 class UpdateNotificationDialog(Gtk.Window): # Dialog for displaying message to user
     def __init__(self, text):
@@ -51,3 +52,13 @@ class UpdateStatusWindow(Gtk.Window):
         self.textview.set_cursor_visible(False)
         self.textview.set_wrap_mode(2)
         scrolledwindow.add(self.textview)
+        self.updatesthread = threading.Thread(target=self.doUpdates) # Start updates thread
+        self.updatesthread.start()
+
+    def updateProgress(self, progress):
+        self.textbuffer.insert_at_cursor(progress) # Add progress to tex view
+
+    def doUpdates(self):
+        updates = runUpdates() # Run updates
+        for line in updates.stdout: # Update text view
+            GLib.idle_add(self.updateProgress, line.decode())
