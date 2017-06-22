@@ -56,7 +56,8 @@ class UpdateStatusWindow(Gtk.Window):
         self.updatesthread.start()
 
     def updateProgress(self, progress):
-        self.textbuffer.insert_at_cursor(progress) # Add progress to tex view
+        self.textbuffer.insert_at_cursor(progress) # Add progress to text view
+        self.textview.scroll_to_mark(self.textbuffer.get_insert(), 0.0, True, 0.5, 0.5)
 
     def doUpdates(self):
         updates = runUpdates() # Run updates
