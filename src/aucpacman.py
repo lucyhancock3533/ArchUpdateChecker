@@ -11,8 +11,8 @@ def getUpdateCount(): # Get number of packages needing updates
     return int(updates.read())
 
 def runUpdates(): # Run pacman and update system
-    updates = subprocess.Popen(["/usr/bin/pacman", '-Su'], stdout=subprocess.PIPE)
+    updates = subprocess.Popen(["/usr/bin/pacman", "-Su", "--noconfirm", "--noprogressbar"], stdout=subprocess.PIPE)
 
 def getUpdates(): # Get list of updates
-    updates = subprocess.check_output(["/usr/bin/pacman", '-Qnu']).splitlines()
+    updates = subprocess.check_output(["/usr/bin/pacman", "-Qnu"]).splitlines()
     return updates
