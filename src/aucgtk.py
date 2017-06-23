@@ -5,6 +5,8 @@ import threading
 from gi.repository import GLib, Gtk, GObject
 from aucpacman import getUpdates, runUpdates
 from subprocess import CalledProcessError
+from pathlib import Path
+from datetime import datetime
 
 class MessageNotificationWindow(Gtk.Window):
     """Window for displaying message to user"""
@@ -80,11 +82,19 @@ class UpdateStatusWindow(Gtk.Window):
         self.textview.scroll_to_mark(self.textbuffer.get_insert(), 0.0, True, 0.5, 0.5)
 
     def finishUpdates(self, parent):
+        self.saveLog()
         msg = MessageNotificationWindow("<big>Updates are complete</big>")
         msg.show_all()
         msg.connect("delete-event", Gtk.main_quit)
         self.hide()
         parent.hide()
+
+    def saveLog(self):
+        logFolder = Path("/var/log/auc/")
+        logFolder.mkdir(parents=True, exist_ok=True)
+        log = open("/var/log/auc/" + str(datetime.now()), "w")
+        log.write(self.textbuffer.get_text(self.textbuffer.get_iter_at_line(0), self.textbuffer.get_iter_at_line(self.textbuffer.get_line_count()), True))
+        log.close()
 
     def doUpdates(self):
         try:
