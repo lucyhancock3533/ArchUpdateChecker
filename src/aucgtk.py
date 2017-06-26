@@ -1,6 +1,7 @@
 #! /usr/bin/python3
 """Module for dealing with GUIs"""
 
+import os
 import threading
 from gi.repository import GLib, Gtk, GObject
 from aucpacman import getUpdates, runUpdates
