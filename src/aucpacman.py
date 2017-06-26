@@ -1,9 +1,10 @@
 #! /usr/bin/python3
+"""AUC pacman module, deals with interacting with the pacman command"""
 
 import subprocess, os, sys
 
 def syncDB(): # Invoke pacman and update package database
-    syncProcess = subprocess.Popen(["/usr/bin/pacman", "-Syy"])
+    syncProcess = subprocess.Popen(["/usr/bin/gksudo", "/usr/bin/pacman -Syy"])
     syncProcess.wait()
 
 def getUpdateCount(): # Get number of packages needing updates
@@ -11,7 +12,7 @@ def getUpdateCount(): # Get number of packages needing updates
     return int(updates.read())
 
 def runUpdates(): # Run pacman and update system
-    updates = subprocess.Popen(["/usr/bin/pacman", "-Su", "--noconfirm", "--noprogressbar"], stdout=subprocess.PIPE)
+    updates = subprocess.Popen(["/usr/bin/gksudo", "/usr/bin/pacman -Su --noconfirm --noprogressbar"], stdout=subprocess.PIPE)
     return updates
 
 def getUpdates(): # Get list of updates
