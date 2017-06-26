@@ -90,9 +90,9 @@ class UpdateStatusWindow(Gtk.Window):
         parent.hide()
 
     def saveLog(self):
-        logFolder = Path("/var/log/auc/")
+        logFolder = Path(os.path.expanduser("~/.auc/"))
         logFolder.mkdir(parents=True, exist_ok=True)
-        log = open("/var/log/auc/" + str(datetime.now()), "w")
+        log = open(os.path.expanduser("~/.auc/") + str(datetime.now()) + ".log", "w")
         log.write(self.textbuffer.get_text(self.textbuffer.get_iter_at_line(0), self.textbuffer.get_iter_at_line(self.textbuffer.get_line_count()), True))
         log.close()
 
