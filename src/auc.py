@@ -7,6 +7,10 @@ from gi.repository import Gtk
 from aucgtk import UpdateNotificationWindow
 from aucpacman import getUpdateCount, syncDB
 
+mirrorlistAddress = "https://www.archlinux.org/mirrorlist/?country=all&protocol=http&protocol=https&ip_version=4&ip_version=6&use_mirror_status=on" # Address of mirrorlist to fetch
+
+#mlp = subprocess.Popen(["/usr/bin/gksudo", "/usr/bin/wget -O /etc/pacman.d/mirrorlist \"" + mirrorlistAddress + "\""]) # Update pacman mirrorlist
+#mlp.wait()
 syncDB() # Update pacman database
 if (getUpdateCount() > 0):
     notify = UpdateNotificationWindow("<big>" + str(getUpdateCount()) + " updates are available</big>") # Alert user to updates
