@@ -9,7 +9,6 @@ from subprocess import CalledProcessError
 from pathlib import Path
 from datetime import datetime
 from aucpmml import setMrlUrl
-from auc import run_auc
 
 class MessageNotificationWindow(Gtk.Window):
     """Window for displaying message to user"""
