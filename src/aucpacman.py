@@ -11,11 +11,21 @@ def sync_db(): # Invoke pacman and update package database
 
 def get_update_count(): # Get number of packages needing updates
     """Retrives number of updates available"""
-    updates_check = os.popen("pacman -Qnu")
+    updates = os.popen("pacman -Qnu")
     updates = updates.read().splitlines()
     count = 0
     for update in updates:
         if "[ignored]" not in update:
+            count = count + 1
+    return count
+
+def get_ignored_count(): # Get number of packages needing updates
+    """Retrives number of updates available"""
+    updates = os.popen("pacman -Qnu")
+    updates = updates.read().splitlines()
+    count = 0
+    for update in updates:
+        if "[ignored]" in update:
             count = count + 1
     return count
 
