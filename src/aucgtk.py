@@ -4,7 +4,7 @@
 import os
 import threading
 from gi.repository import GLib, Gtk, GObject
-from aucpacman import get_updates, run_updates, get_update_count, sync_db
+from aucpacman import get_updates, run_updates, get_update_count, get_ignore_count, sync_db
 from subprocess import CalledProcessError
 from pathlib import Path
 from datetime import datetime
@@ -22,19 +22,22 @@ class MessageNotificationWindow(Gtk.Window):
 
 class UpdateNotificationWindow(Gtk.Window):
     """Window for displaying update message to user"""
-    def __init__(self, text):
+    def __init__(self, text, ignore):
         Gtk.Window.__init__(self, title="AUC") # Create window
         grid = Gtk.Grid() # Create component grid
         self.add(grid)
         label = Gtk.Label() # Create and set label to input
         label.set_markup(text)
         grid.attach(label, 0, 0, 2, 1)
+        ignore_label = Gtk.Label()
+        ignore_label.set_markup(ignore)
+        grid.attach(ignore_label, 0, 1, 2, 1)
         update_button = Gtk.Button("Update") # Add update button
         view_button = Gtk.Button("View") # Add view updates button
         view_button.connect("clicked", self.launch_view_window)
         update_button.connect("clicked", self.launch_update_window)
-        grid.attach(view_button, 0, 1, 1, 1)
-        grid.attach(update_button, 1, 1, 1, 1)
+        grid.attach(view_button, 0, 2, 1, 1)
+        grid.attach(update_button, 1, 2, 1, 1)
 
     def launch_view_window(self, button):
         try:
@@ -140,7 +143,7 @@ def run_auc():
     update_mrl() # update mirrorlist here
     sync_db() # Update pacman database
     if (get_update_count() > 0):
-        notify = UpdateNotificationWindow("<big>" + str(get_update_count()) + " updates are available</big>") # Alert user to updates
+        notify = UpdateNotificationWindow("<big>" + str(get_update_count()) + " updates are available</big>", "<big>" + str(get_ignore_count()) + " updates are ignored</big>") # Alert user to updates
         notify.connect("delete-event", Gtk.main_quit)
         notify.show_all()
         return True
