@@ -4,12 +4,16 @@
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-from aucgtk import UpdateNotificationWindow
-from aucpacman import getUpdateCount, syncDB
+from aucgtk import MirrorlistSettingsWindow, run_auc
+from aucpmml import get_mrl_url
 
-syncDB() # Update pacman database
-if (getUpdateCount() > 0):
-    notify = UpdateNotificationWindow("<big>" + str(getUpdateCount()) + " updates are available</big>") # Alert user to updates
-    notify.connect("delete-event", Gtk.main_quit)
-    notify.show_all()
-    Gtk.main()
+if(__name__ == "__main__"):
+    mirrorlist = get_mrl_url()
+    if(mirrorlist == ""): # If mirrorlist url not set, prompt
+        mlget = MirrorlistSettingsWindow()
+        mlget.connect("delete-event", Gtk.main_quit)
+        mlget.show_all()
+        Gtk.main()
+    else:
+        if(run_auc()):
+            Gtk.main()
