@@ -15,10 +15,10 @@ def run_auc_cli():
 
 def run_auc():
     sync_db()
+    print(str(get_update_count()) + " updates are available, " + str(get_ignore_count())\
+    + " updates are ignored")
     if (get_update_count() > 0):
         prompt_updates()
-    else:
-        print("No updates are available")
 
 def prompt_updates():
     pass
