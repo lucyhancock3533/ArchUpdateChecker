@@ -3,6 +3,8 @@
 
 import os
 import threading
+import gi
+gi.require_version('Gtk', '3.0')
 from gi.repository import GLib, Gtk, GObject
 from aucpacman import get_updates, run_updates, get_update_count, get_ignore_count, sync_db
 from subprocess import CalledProcessError
