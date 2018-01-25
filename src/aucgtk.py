@@ -3,12 +3,14 @@
 
 import os
 import threading
+import gi
+gi.require_version('Gtk', '3.0')
 from gi.repository import GLib, Gtk, GObject
 from aucpacman import get_updates, run_updates, get_update_count, get_ignore_count, sync_db
 from subprocess import CalledProcessError
 from pathlib import Path
 from datetime import datetime
-from aucpmml import set_mrl_url, update_mrl
+from aucpmml import set_mrl_url, update_mrl, get_mrl_url
 
 class MessageNotificationWindow(Gtk.Window):
     """Window for displaying message to user"""
@@ -98,12 +100,13 @@ class UpdateStatusWindow(Gtk.Window):
         logFolder = Path(os.path.expanduser("~/.auc/"))
         logFolder.mkdir(parents=True, exist_ok=True)
         log = open(os.path.expanduser("~/.auc/") + str(datetime.now()) + ".log", "w")
-        log.write(self.textbuffer.get_text(self.textbuffer.get_iter_at_line(0), self.textbuffer.get_iter_at_line(self.textbuffer.get_line_count()), True))
+        log.write(self.textbuffer.get_text(self.textbuffer.get_iter_at_line(0),\
+        self.textbuffer.get_iter_at_line(self.textbuffer.get_line_count()), True))
         log.close()
 
     def do_updates(self):
         try:
-            updates = run_updates() # Run updates
+            updates = run_updates(["/usr/bin/gksudo", "pacman -Su --noconfirm --noprogressbar"]) # Run updates
             for line in updates.stdout: # Update text view
                 GLib.idle_add(self.update_progress, line.decode())
             GLib.idle_add(self.finish_updates, self.super)
@@ -134,18 +137,35 @@ class MirrorlistSettingsWindow(Gtk.Window):
         grid.attach(exit_button, 1, 3, 1, 1)
     def set_mirrorlist(self, parent):
         """Get url from buffer and save to file"""
-        set_mrl_url(self.textbuffer.get_text(self.textbuffer.get_iter_at_line(0), self.textbuffer.get_iter_at_line(self.textbuffer.get_line_count()), True))
+        set_mrl_url(self.textbuffer.get_text(self.textbuffer.get_iter_at_line(0)\
+        , self.textbuffer.get_iter_at_line(self.textbuffer.get_line_count()), True))
         self.hide()
         if(not run_auc()):
             Gtk.main_quit()
 
 def run_auc():
-    update_mrl() # update mirrorlist here
-    sync_db() # Update pacman database
+    sync_db(["/usr/bin/gksudo", "pacman -Sy"]) # Update pacman database
     if (get_update_count() > 0):
-        notify = UpdateNotificationWindow("<big>" + str(get_update_count()) + " updates are available</big>", "<big>" + str(get_ignore_count()) + " updates are ignored</big>") # Alert user to updates
+        notify = UpdateNotificationWindow("<big>" + str(get_update_count()) +\
+        " updates are available</big>", "<big>" + str(get_ignore_count()) +\
+        " updates are ignored</big>") # Alert user to updates
         notify.connect("delete-event", Gtk.main_quit)
         notify.show_all()
         return True
     else:
         return False
+
+def run_auc_gtk():
+    mirrorlist = get_mrl_url()
+    if(mirrorlist == ""): # If mirrorlist url not set, prompt
+        mlget = MirrorlistSettingsWindow()
+        mlget.connect("delete-event", Gtk.main_quit)
+        mlget.show_all()
+        Gtk.main()
+    elif(mirrorlist == "NOMRLUPD"):
+        if(run_auc()):
+            Gtk.main()
+    else:
+        update_mrl()
+        if(run_auc()):
+            Gtk.main()

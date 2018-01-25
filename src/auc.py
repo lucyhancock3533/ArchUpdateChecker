@@ -1,19 +1,20 @@
 #! /usr/bin/python3
 """AUC Main module, syncs, checks for updates, and alerts user."""
 
-import gi
-gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
-from aucgtk import MirrorlistSettingsWindow, run_auc
-from aucpmml import get_mrl_url
+from sys import argv
+from auccli import run_auc_cli
 
 if(__name__ == "__main__"):
-    mirrorlist = get_mrl_url()
-    if(mirrorlist == ""): # If mirrorlist url not set, prompt
-        mlget = MirrorlistSettingsWindow()
-        mlget.connect("delete-event", Gtk.main_quit)
-        mlget.show_all()
-        Gtk.main()
-    else:
-        if(run_auc()):
-            Gtk.main()
+    try:
+        if(len(argv) > 1):
+            run_auc_cli()
+        else:
+            try:
+                import gi
+                gi.require_version('Gtk', '3.0')
+                from aucgtk import run_auc_gtk
+                run_auc_gtk()
+            except ImportError:
+                print("[AUC] GTK not available and no parameters passed")
+    except KeyboardInterrupt:
+        quit()
