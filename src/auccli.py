@@ -28,6 +28,6 @@ def prompt_updates():
         do_updates()
 
 def do_updates():
-    update_pipe = run_updates(["/usr/bin/sudo", "pacman", "-Su"])
+    update_pipe = run_updates(["/usr/bin/sudo", "pacman", "-Su", "--noconfirm", "--noprogressbar"])
     for line in update_pipe.stdout: # Update text view
         print(line.decode("utf-8"))
