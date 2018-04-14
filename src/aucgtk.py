@@ -11,6 +11,7 @@ from subprocess import CalledProcessError
 from pathlib import Path
 from datetime import datetime
 from aucpmml import set_mrl_url, update_mrl, get_mrl_url
+from auclog import Logger
 
 class MessageNotificationWindow(Gtk.Window):
     """Window for displaying message to user"""
@@ -89,26 +90,22 @@ class UpdateStatusWindow(Gtk.Window):
         self.textview.scroll_to_mark(self.textbuffer.get_insert(), 0.0, True, 0.5, 0.5)
 
     def finish_updates(self, parent):
-        self.save_log()
+		self.log.log_write("AUC Updates are complete")
+        self.log.log_close()
         msg = MessageNotificationWindow("<big>Updates are complete</big>")
         msg.show_all()
         msg.connect("delete-event", Gtk.main_quit)
         self.hide()
         parent.hide()
 
-    def save_log(self):
-        logFolder = Path(os.path.expanduser("~/.auc/"))
-        logFolder.mkdir(parents=True, exist_ok=True)
-        log = open(os.path.expanduser("~/.auc/") + str(datetime.now()) + ".log", "w")
-        log.write(self.textbuffer.get_text(self.textbuffer.get_iter_at_line(0),\
-        self.textbuffer.get_iter_at_line(self.textbuffer.get_line_count()), True))
-        log.close()
-
     def do_updates(self):
+		self.log = Logger()
+		self.log.log_write("AUC updating in GUI mode")
         try:
             updates = run_updates(["/usr/bin/gksudo", "pacman -Su --noconfirm --noprogressbar"]) # Run updates
             for line in updates.stdout: # Update text view
                 GLib.idle_add(self.update_progress, line.decode())
+				self.log.log_write(line.decode())
             GLib.idle_add(self.finish_updates, self.super)
         except CalledProcessError:
             msg = MessageNotificationWindow("<big>Failed to install updates</big>")
