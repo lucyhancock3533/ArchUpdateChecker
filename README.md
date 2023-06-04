@@ -6,9 +6,7 @@ Requirements:
 * GTK 3
 * GKSU
 * PyGObject
-* GNU wc
 * pacman package manager
 * Python requests package (installed globally)
-* A bash like default shell
 
 To run, execute auc.py. AUC should be ran as a normal user.
