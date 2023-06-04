@@ -1,4 +1,8 @@
+#! /usr/bin/python3
+
 import subprocess, os, sys
+from tkinter import *
+from tkinter import messagebox
 
 def syncDB():
     syncProcess = subprocess.Popen(["/usr/bin/pacman", "-Syy"])
@@ -15,5 +19,7 @@ def getUpdates():
     print(str(updCount) + " updates are available")
     return updCount
 
+root = Tk()
+root.withdraw()
 syncDB()
-getUpdates()
+messagebox.showinfo('AUC', str(getUpdates()) + ' updates are available')
