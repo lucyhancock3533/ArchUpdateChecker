@@ -5,9 +5,10 @@ from multiprocessing.connection import Listener
 
 
 class DaemonListener:
-    def __init__(self, args, logger):
+    def __init__(self, args, logger, state):
         self.args = args
         self.logger = logger
+        self.state = state
         self._init_secret()
         Path('/tmp/.auc_socket').unlink(missing_ok=True)
         self.listener = Listener('/tmp/.auc_socket', family='AF_UNIX', authkey=self.secret.encode())
@@ -27,6 +28,11 @@ class DaemonListener:
                     self.logger.debug("New connection accepted")
                     try:
                         msg = conn.recv()
+                        if msg not in func.keys():
+                            self.logger.error('Requested operation from client not valid')
+                            conn.send('err:notvalid')
+                        else:
+                            func[msg](self.state)
                     except EOFError:
                         conn.close()
                         break
@@ -36,3 +42,15 @@ class DaemonListener:
             Path('/tmp/.auc_secret').unlink(missing_ok=True)
             self.logger.info('Exiting')
 
+
+def get_status(state):
+    return state.access_state('msg')
+
+
+def get_prompt(state):
+    if state.access_state('prompt'):
+        return state.access_state('msg')
+    return None
+
+
+func = {'status': get_status, 'prompt': get_prompt}
