@@ -27,10 +27,14 @@ class DaemonListener:
                     except EOFError:
                         break
                     print(msg)
+                    conn.send('recv')
                 conn.close()
         except KeyboardInterrupt:
             self.listener.close()
-            Path('/tmp/.auc_socket').unlink()
+            try:
+                Path('/tmp/.auc_socket').unlink()
+            except FileNotFoundError:
+                pass
             Path('/tmp/.auc_secret').unlink()
             self.logger.info('Exiting')
 
