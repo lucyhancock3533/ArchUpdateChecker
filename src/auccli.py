@@ -1,6 +1,8 @@
+#! /usr/bin/python3
+"""AUC Main CLI module, syncs, checks for updates, and alerts user."""
+
 from aucpacman import sync_db, get_update_count, get_ignore_count, get_updates, run_updates
 from aucpmml import get_mrl_url, set_mrl_url, update_mrl
-"""Module dealing with cli for AUC"""
 
 def run_auc_cli():
     print("ArchUpdateChecker v0-git")
