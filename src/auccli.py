@@ -21,7 +21,13 @@ def run_auc():
         prompt_updates()
 
 def prompt_updates():
-    pass
+    updates = [upd.decode("utf-8") for upd in get_updates()]
+    print("Updates available: " + ', '.join(updates))
+    check_upd = input("Update now?(y/n) ")
+    if check_upd == 'y':
+        do_updates()
 
 def do_updates():
-    pass
+    update_pipe = run_updates()
+    for line in update_pipe.stdout: # Update text view
+        print(line.decode("utf-8"))
