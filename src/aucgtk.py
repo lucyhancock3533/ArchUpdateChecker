@@ -106,3 +106,25 @@ class UpdateStatusWindow(Gtk.Window):
         except CalledProcessError:
             msg = MessageNotificationWindow("<big>Failed to install updates</big>")
             msg.show_all()
+
+class MirrorlistSettingsWindow(Gtk.Window):
+    def __init__(self):
+        Gtk.Window.__init__(self, title="AUC") #Create Window
+        grid = Gtk.Grid()
+        self.add(grid) # Create and add grid UI
+        label = Gtk.Label("Please input mirrorlist URL")
+        grid.attach(label, 0, 0, 2, 1)
+        sc_win = Gtk.ScrolledWindow()
+        sc_win.set_hexpand(True)
+        sc_win.set_vexpand(True)
+        grid.attach(sc_win, 0, 1, 2, 2) # Create and add scrolled UI
+        self.textview = Gtk.TextView()
+        self.textbuffer = self.textview.get_buffer() # Create text view and get buffer
+        self.textview.set_wrap_mode(2)
+        sc_win.add(self.textview) # Setup and add to sc_win
+        save_button = Gtk.Button("Save")
+        exit_button = Gtk.Button("Exit")
+        #save_button.connect("clicked", quit())
+        exit_button.connect("clicked", Gtk.main_quit)
+        grid.attach(save_button, 0, 3, 1, 1)
+        grid.attach(exit_button, 1, 3, 1, 1)
