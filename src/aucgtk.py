@@ -8,6 +8,8 @@ from aucpacman import getUpdates, runUpdates
 from subprocess import CalledProcessError
 from pathlib import Path
 from datetime import datetime
+from aucpmml import setMrlUrl
+from auc import run_auc
 
 class MessageNotificationWindow(Gtk.Window):
     """Window for displaying message to user"""
@@ -124,7 +126,9 @@ class MirrorlistSettingsWindow(Gtk.Window):
         sc_win.add(self.textview) # Setup and add to sc_win
         save_button = Gtk.Button("Save")
         exit_button = Gtk.Button("Exit")
-        #save_button.connect("clicked", quit())
+        save_button.connect("clicked", self.set_mirrorlist)
         exit_button.connect("clicked", Gtk.main_quit)
         grid.attach(save_button, 0, 3, 1, 1)
         grid.attach(exit_button, 1, 3, 1, 1)
+    def set_mirrorlist(self, parent):
+        setMrlUrl(self.textbuffer.get_text(self.textbuffer.get_iter_at_line(0), self.textbuffer.get_iter_at_line(self.textbuffer.get_line_count()), True))
