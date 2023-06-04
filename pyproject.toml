@@ -9,7 +9,7 @@ readme = "README.md"
 python = "^3.11"
 
 [tool.poetry.scripts]
-auc = "ArchUpdateChecker.auc:run"
+auc = "auc.auc:run"
 
 
 [build-system]

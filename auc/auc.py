@@ -3,7 +3,7 @@ import sys
 
 from argparse import ArgumentParser
 
-from ArchUpdateChecker.daemon.daemon import add_subparser as daemon_subparse, run_daemon
+from auc.daemon.daemon import add_subparser as daemon_subparse, run_daemon
 
 
 def version(args, logger):

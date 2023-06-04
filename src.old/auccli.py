@@ -5,7 +5,7 @@ from aucpacman import sync_db, get_update_count, get_ignore_count, get_updates, 
 from aucpmml import get_mrl_url, set_mrl_url, update_mrl
 
 def run_auc_cli():
-    print("ArchUpdateChecker v0-git")
+    print("auc v0-git")
     mirrorlist = get_mrl_url()
     if(mirrorlist == ""):
         pass
