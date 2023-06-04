@@ -1,5 +1,5 @@
 # ArchUpdateChecker
-A small wrapper around pacman for Arch Linux that prompts the user when updates are available.
+A small wrapper around pacman for Arch Linux that prompts the user if updates are available when ran.
 
 Requirements:
 * Python 3.6+
