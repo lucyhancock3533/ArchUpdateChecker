@@ -4,7 +4,7 @@
 import os
 import threading
 from gi.repository import GLib, Gtk, GObject
-from aucpacman import getUpdates, runUpdates
+from aucpacman import getUpdates, runUpdates, getUpdateCount, syncDB
 from subprocess import CalledProcessError
 from pathlib import Path
 from datetime import datetime
@@ -131,3 +131,16 @@ class MirrorlistSettingsWindow(Gtk.Window):
         grid.attach(exit_button, 1, 3, 1, 1)
     def set_mirrorlist(self, parent):
         setMrlUrl(self.textbuffer.get_text(self.textbuffer.get_iter_at_line(0), self.textbuffer.get_iter_at_line(self.textbuffer.get_line_count()), True))
+        self.hide()
+        run_auc()
+
+def run_auc():
+    # update mirrorlist here
+    syncDB() # Update pacman database
+    if (getUpdateCount() > 0):
+        notify = UpdateNotificationWindow("<big>" + str(getUpdateCount()) + " updates are available</big>") # Alert user to updates
+        notify.connect("delete-event", Gtk.main_quit)
+        notify.show_all()
+        return True
+    else:
+        return False
