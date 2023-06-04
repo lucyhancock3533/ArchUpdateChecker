@@ -98,7 +98,8 @@ class UpdateStatusWindow(Gtk.Window):
         logFolder = Path(os.path.expanduser("~/.auc/"))
         logFolder.mkdir(parents=True, exist_ok=True)
         log = open(os.path.expanduser("~/.auc/") + str(datetime.now()) + ".log", "w")
-        log.write(self.textbuffer.get_text(self.textbuffer.get_iter_at_line(0), self.textbuffer.get_iter_at_line(self.textbuffer.get_line_count()), True))
+        log.write(self.textbuffer.get_text(self.textbuffer.get_iter_at_line(0),\
+        self.textbuffer.get_iter_at_line(self.textbuffer.get_line_count()), True))
         log.close()
 
     def do_updates(self):
@@ -134,7 +135,8 @@ class MirrorlistSettingsWindow(Gtk.Window):
         grid.attach(exit_button, 1, 3, 1, 1)
     def set_mirrorlist(self, parent):
         """Get url from buffer and save to file"""
-        set_mrl_url(self.textbuffer.get_text(self.textbuffer.get_iter_at_line(0), self.textbuffer.get_iter_at_line(self.textbuffer.get_line_count()), True))
+        set_mrl_url(self.textbuffer.get_text(self.textbuffer.get_iter_at_line(0)\
+        , self.textbuffer.get_iter_at_line(self.textbuffer.get_line_count()), True))
         self.hide()
         if(not run_auc()):
             Gtk.main_quit()
@@ -142,7 +144,9 @@ class MirrorlistSettingsWindow(Gtk.Window):
 def run_auc():
     sync_db() # Update pacman database
     if (get_update_count() > 0):
-        notify = UpdateNotificationWindow("<big>" + str(get_update_count()) + " updates are available</big>", "<big>" + str(get_ignore_count()) + " updates are ignored</big>") # Alert user to updates
+        notify = UpdateNotificationWindow("<big>" + str(get_update_count()) +\
+        " updates are available</big>", "<big>" + str(get_ignore_count()) +\
+        " updates are ignored</big>") # Alert user to updates
         notify.connect("delete-event", Gtk.main_quit)
         notify.show_all()
         return True
