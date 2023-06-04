@@ -166,6 +166,6 @@ def run_auc_gtk():
         if(run_auc()):
             Gtk.main()
     else:
-        update_mrl()
+        update_mrl("gksudo")
         if(run_auc()):
             Gtk.main()

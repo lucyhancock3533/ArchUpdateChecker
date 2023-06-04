@@ -29,7 +29,7 @@ def set_mrl_url(new_url):
     file.write('\n')
     file.close() # Write settings to file
 
-def update_mrl():
+def update_mrl(sudo):
     url = get_mrl_url()
     mrl_req =  requests.get(url)
     config_folder = Path(os.path.expanduser("~/.auc/"))
@@ -40,4 +40,4 @@ def update_mrl():
     file = open(os.path.expanduser("~/.auc/mirrorlist.tmp"), 'w')
     file.write(mrl_req.text.replace('#S', 'S')) # Remove commenting from generated mirrorlist
     file.close()
-    os.popen("gksudo mv ~/.auc/mirrorlist.tmp /etc/pacman.d/mirrorlist")
+    os.popen(sudo + " mv ~/.auc/mirrorlist.tmp /etc/pacman.d/mirrorlist")

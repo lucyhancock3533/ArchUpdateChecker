@@ -10,7 +10,7 @@ def run_auc_cli():
     elif(mirrorlist == "NOMRLUPD"):
         run_auc()
     else:
-        update_mrl()
+        update_mrl("sudo")
         run_auc()
 
 def run_auc():
