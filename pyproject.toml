@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "archupdatechecker"
+name = "auc"
 version = "1.0.0-dev"
 description = ""
 authors = ["Lucy Hancock <lucy@leh.dev>"]
