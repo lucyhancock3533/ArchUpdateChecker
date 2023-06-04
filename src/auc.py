@@ -1,25 +1,19 @@
-#! /usr/bin/python3
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
+from aucpacman import getUpdates, syncDB
 
-import subprocess, os, sys
-from tkinter import *
-from tkinter import messagebox
+class MessageDialogWindow(Gtk.Window):
+    def __init__(self):
+        Gtk.Window.__init__(self, title="AUC")
+        box = Gtk.Box(spacing=6)
+        self.add(box)
+        label = Gtk.Label()
+        label.set_markup("<big>" + str(getUpdates()) + " updates are available</big>")
+        box.add(label)
 
-def syncDB():
-    syncProcess = subprocess.Popen(["/usr/bin/pacman", "-Syy"])
-    syncProcess.wait()
-    if syncProcess.returncode == 0:
-        print("Database syncronised")
-    else:
-        print("Failed to syncronise DB")
-        quit(1)
-
-def getUpdates():
-    updates = os.popen("pacman -Qnu | wc -l")
-    updCount = int(updates.read())
-    print(str(updCount) + " updates are available")
-    return updCount
-
-root = Tk()
-root.withdraw()
 syncDB()
-messagebox.showinfo('AUC', str(getUpdates()) + ' updates are available')
+win = MessageDialogWindow()
+win.connect("delete-event", Gtk.main_quit)
+win.show_all()
+Gtk.main()
