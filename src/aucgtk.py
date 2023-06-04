@@ -106,7 +106,7 @@ class UpdateStatusWindow(Gtk.Window):
 
     def do_updates(self):
         try:
-            updates = run_updates(["/usr/bin/gksudo", "pacman -Su"]) # Run updates
+            updates = run_updates(["/usr/bin/gksudo", "pacman -Su --noconfirm --noprogressbar"]) # Run updates
             for line in updates.stdout: # Update text view
                 GLib.idle_add(self.update_progress, line.decode())
             GLib.idle_add(self.finish_updates, self.super)
