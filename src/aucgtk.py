@@ -4,7 +4,7 @@ import threading
 from gi.repository import GLib, Gtk, GObject
 from aucpacman import getUpdates, runUpdates
 
-class UpdateNotificationDialog(Gtk.Window): # Dialog for displaying message to user
+class UpdateNotificationWindow(Gtk.Window): # Window for displaying message to user
     def __init__(self, text):
         Gtk.Window.__init__(self, title="AUC") # Create window
         grid = Gtk.Grid() # Create component grid
@@ -24,10 +24,10 @@ class UpdateNotificationDialog(Gtk.Window): # Dialog for displaying message to u
         window.show_all()
 
     def launchUpdateWindow(self, button):
-        window = UpdateStatusWindow()
+        window = UpdateStatusWindow(self)
         window.show_all()
 
-class UpdateViewWindow(Gtk.Window):
+class UpdateViewWindow(Gtk.Window): # Window for viewing available updates
     def __init__(self, updates):
         Gtk.Window.__init__(self, title="AUC") # Create window
         listbox = Gtk.ListBox() # Create list of updates
@@ -38,8 +38,8 @@ class UpdateViewWindow(Gtk.Window):
             listbox.add(row)
         self.add(listbox)
 
-class UpdateStatusWindow(Gtk.Window):
-    def __init__(self):
+class UpdateStatusWindow(Gtk.Window): # Window for showing update status
+    def __init__(self, parent):
         Gtk.Window.__init__(self, title="AUC") # Create window
         self.set_default_size(800, 600) # Set window size
         scrolledwindow = Gtk.ScrolledWindow() # Create scrolled container
@@ -54,6 +54,7 @@ class UpdateStatusWindow(Gtk.Window):
         scrolledwindow.add(self.textview)
         self.updatesthread = threading.Thread(target=self.doUpdates) # Start updates thread
         self.updatesthread.start()
+        self.super = parent
 
     def updateProgress(self, progress):
         self.textbuffer.insert_at_cursor(progress) # Add progress to text view
