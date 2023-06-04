@@ -12,3 +12,9 @@ class DaemonListener:
         self.secret = secrets.token_hex(nbytes=512)
         with open('/tmp/.auc_secret', 'w') as f:
             f.write(self.secret)
+
+    def listen_loop(self):
+        conn = self.listener.accept()
+        while True:
+            msg = conn.recv()
+            print(msg)

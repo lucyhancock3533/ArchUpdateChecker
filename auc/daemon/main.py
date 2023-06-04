@@ -7,3 +7,4 @@ def add_subparser(subparser):
 
 def run_daemon(args, logger):
     l = DaemonListener()
+    l.listen_loop()
