@@ -21,18 +21,19 @@ class DaemonListener:
 
     def listen_loop(self):
         try:
-            self.logger.info('Starting daemon listener')
+            self.logger.info('[LISTENER] Starting daemon listener')
             while True:
                 conn = self.listener.accept()
                 while True:
-                    self.logger.debug("New connection accepted")
+                    self.logger.debug("[LISTENER] New connection accepted")
                     try:
                         msg = conn.recv()
                         if msg not in func.keys():
-                            self.logger.error('Requested operation from client not valid')
+                            self.logger.error('[LISTENER] Requested operation from client not valid')
                             conn.send('err:notvalid')
                         else:
-                            func[msg](self.state)
+                            self.logger.info('[LISTENER] Executing %s' % msg)
+                            conn.send(func[msg](self.state))
                     except EOFError:
                         conn.close()
                         break
@@ -40,7 +41,7 @@ class DaemonListener:
             self.listener.close()
             Path('/tmp/.auc_socket').unlink(missing_ok=True)
             Path('/tmp/.auc_secret').unlink(missing_ok=True)
-            self.logger.info('Exiting')
+            self.logger.info('Stopping listener')
 
 
 def get_status(state):
@@ -50,7 +51,7 @@ def get_status(state):
 def get_prompt(state):
     if state.access_state('prompt'):
         return state.access_state('msg')
-    return None
+    return 'err:inprogress'
 
 
 func = {'status': get_status, 'prompt': get_prompt}
