@@ -20,7 +20,7 @@ def run_daemon(args, logger):
     # Start listener thread
     logger.info('Starting listener')
     listener = DaemonListener(args, logger, state)
-    lt = Thread(target=listener.listen_loop)
+    lt = Thread(target=listener.listen_loop, daemon=True)
     lt.start()
 
     try:
