@@ -1,6 +1,7 @@
 import time
 
 from threading import Thread
+from pathlib import Path
 
 from auc.daemon.listener import DaemonListener
 from auc.daemon.config import AucConfig
@@ -52,4 +53,5 @@ def run_daemon(args, logger):
             time.sleep(300)
     except KeyboardInterrupt:
         logger.info('Exiting')
+        Path('/tmp/.auc_secret').unlink(missing_ok=True)
 
