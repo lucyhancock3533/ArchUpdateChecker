@@ -46,9 +46,15 @@ def get_status(state):
 
 
 def get_prompt(state):
+    if not state.access_state('prompt') and not state.access_state('inprogess'):
+        return 'err:notrequired'
     if state.access_state('prompt'):
         return state.access_state('msg')
-    return 'err:inprogress'
+    return 'err:noprompt'
 
 
-func = {'status': get_status, 'prompt': get_prompt}
+def get_updates(state):
+    return state.access_state('updates')
+
+
+func = {'status': get_status, 'prompt': get_prompt, 'updates': get_updates}

@@ -10,7 +10,8 @@ class AucState:
             'mirrorlist': True,
             'update': True,
             'inprogress': True,
-            'rebootrequired': False
+            'rebootrequired': False,
+            'updates': {}
         }
 
     def access_state(self, key):
