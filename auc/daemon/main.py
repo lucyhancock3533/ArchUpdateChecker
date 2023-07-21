@@ -55,6 +55,7 @@ def run_daemon(args, logger):
                     try:
                         p.sync_db()
                     except subprocess.CalledProcessError:
+                        logger.error('Failed to check for updates')
                         state.set_state('inprogress', False)
                         state.set_state('prompt', True)
                         state.set_state('msg', 'Failed to sync pacman DB, see logs for more detail')
@@ -64,16 +65,13 @@ def run_daemon(args, logger):
                         updates = p.get_updates()
                         state.set_state('updates', updates)
                     except subprocess.CalledProcessError:
-                        state.set_state('inprogress', False)
-                        state.set_state('prompt', True)
-                        state.set_state('msg', 'Failed to get pacman updates, see logs for more detail')
-                        continue
-
-                    logger.info('Updates available:')
-                    [logger.info('%s %s ->  %s' % (x, y['old'], y['new'])) for x, y in updates.items()]
+                        logger.info('No updates are available')
+                        updates = {}
 
                     logger.info('Performing updates')
                     if len(updates.keys()) > 0:
+                        logger.info('Updates available:')
+                        [logger.info('%s %s ->  %s' % (x, y['old'], y['new'])) for x, y in updates.items()]
                         try:
                             p.do_updates()
                         except subprocess.CalledProcessError:
