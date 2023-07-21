@@ -68,8 +68,8 @@ def run_daemon(args, logger):
                         logger.info('No updates are available')
                         updates = {}
 
-                    logger.info('Performing updates')
                     if len(updates.keys()) > 0:
+                        logger.info('Performing updates')
                         logger.info('Updates available:')
                         [logger.info('%s %s ->  %s' % (x, y['old'], y['new'])) for x, y in updates.items()]
                         try:
