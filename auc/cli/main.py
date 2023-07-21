@@ -6,10 +6,15 @@ def get_status(client, logger):
     logger.info(client.recv())
 
 
+def clear_reboot(client, logger):
+    client.send('clear-reboot')
+    logger.info(client.recv())
+
+
 def get_updates(client, logger):
     client.send('updates')
     update_dict = client.recv()
-    for k, v in update_dict:
+    for k, v in update_dict.items():
         logger.info('%s from %s to %s' % (k, v['old'], v['new']))
 
 
@@ -25,4 +30,4 @@ def run_cli(args, logger):
     client.close()
 
 
-cmds = {'status': get_status, 'updates': get_updates}
+cmds = {'status': get_status, 'updates': get_updates, 'clear-reboot':  clear_reboot}
