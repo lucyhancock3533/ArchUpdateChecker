@@ -17,6 +17,7 @@ def add_subparser(subparser):
 
 
 def check_internet(ping_addr, logger):
+    logger.debug('Pinging %s', ping_addr)
     res = ping(target=ping_addr, count=1)
     while not res.success():
         time.sleep(60)
@@ -40,8 +41,8 @@ def run_daemon(args, logger):
             logger.debug('Running main loop')
             if state.access_state('inprogress'):
                 internet = False
+                logger.info('Checking for internet connection')
                 while not internet:
-                    logger.info('Checking for internet connection')
                     try:
                         check_internet(config.ping_addr, logger)
                         internet = True
