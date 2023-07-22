@@ -16,11 +16,12 @@ def add_subparser(subparser):
     subparser.add_argument('--config', type=str, default='/etc/auc.yaml', nargs='?')
 
 
-def check_internet(ping_addr, logger):
+def check_network(ping_addr, logger):
     logger.debug('Pinging %s', ping_addr)
     res = ping(target=ping_addr, count=1)
     while not res.success():
         time.sleep(60)
+        logger.debug('Pinging %s', ping_addr)
         res = ping(target=ping_addr, count=1)
 
 
@@ -40,13 +41,13 @@ def run_daemon(args, logger):
         while True:
             logger.debug('Running main loop')
             if state.access_state('inprogress'):
-                internet = False
-                state.set_state('msg', 'Waiting for internet connection')
-                logger.info('Checking for internet connection')
-                while not internet:
+                network = False
+                state.set_state('msg', 'Waiting for network connection')
+                logger.info('Checking for network connection')
+                while not network:
                     try:
-                        check_internet(config.ping_addr, logger)
-                        internet = True
+                        check_network(config.ping_addr, logger)
+                        network = True
                     except OSError:
                         logger.debug('No network connection')
                         time.sleep(60)
