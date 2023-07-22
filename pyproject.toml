@@ -9,6 +9,7 @@ readme = "README.md"
 python = "^3.11"
 requests = "^2.31.0"
 pyyaml = "^6.0"
+pythonping = "^1.1.4"
 
 [tool.poetry.scripts]
 auc = "auc.main:run"
