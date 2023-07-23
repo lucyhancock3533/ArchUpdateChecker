@@ -1,21 +1,36 @@
-from multiprocessing.connection import Client
+import requests
+import requests_unixsocket
 
 
 def get_status(client, logger):
-    client.send('status')
-    logger.info(client.recv())
+    r = requests.post('http+unix://%2Ftmp%2F.auc_socket/',  json={'function': 'status'})
+    if r.status_code == 200:
+        logger.info(r.json()['status'])
+    elif 'error' in r.json():
+        logger.error(r.json()['error'])
+    else:
+        logger.error('Unknown error')
 
 
 def clear_reboot(client, logger):
-    client.send('clear-reboot')
-    logger.info(client.recv())
+    r = requests.post('http+unix://%2Ftmp%2F.auc_socket/', json={'function': 'clear-reboot'})
+    if r.status_code == 200:
+        logger.info(r.json()['msg'])
+    elif 'error' in r.json():
+        logger.error(r.json()['error'])
+    else:
+        logger.error('Unknown error')
 
 
 def get_updates(client, logger):
-    client.send('updates')
-    update_dict = client.recv()
-    for k, v in update_dict.items():
-        logger.info('%s from %s to %s' % (k, v['old'], v['new']))
+    r = requests.post('http+unix://%2Ftmp%2F.auc_socket/', json={'function': 'clear-reboot'})
+    if r.status_code == 200:
+        for k, v in r.json()['updates'].items():
+            logger.info('%s from %s to %s' % (k, v['old'], v['new']))
+    elif 'error' in r.json():
+        logger.error(r.json()['error'])
+    else:
+        logger.error('Unknown error')
 
 
 def add_subparser(subparser):
@@ -23,11 +38,8 @@ def add_subparser(subparser):
 
 
 def run_cli(args, logger):
-    with open('/tmp/.auc_secret', 'r') as f:
-        secret = f.read()
-    client = Client('/tmp/.auc_socket', family='AF_UNIX', authkey=secret.encode())
-    cmds[args.clicmd](client, logger)
-    client.close()
+    requests_unixsocket.monkeypatch()
+    cmds[args.clicmd](logger)
 
 
 cmds = {'status': get_status, 'updates': get_updates, 'clear-reboot':  clear_reboot}
