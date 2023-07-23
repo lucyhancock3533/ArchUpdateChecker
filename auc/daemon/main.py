@@ -1,9 +1,11 @@
 import subprocess
 import time
+import logging
 
 from threading import Thread
 from pathlib import Path
 from pythonping import ping
+from datetime import datetime
 
 from auc.daemon.listener import DaemonListener
 from auc.daemon.config import AucConfig
@@ -26,8 +28,10 @@ def check_network(ping_addr, logger):
 
 
 def run_daemon(args, logger):
-    logger.info('Starting AUC daemon')
     config = AucConfig(args.config, logger)
+    if config.file_log:
+        logger.addHandler(logging.FileHandler(f'{config.log_path}/auc_{datetime.today().strftime("%Y-%m-%d")}.log'))
+    logger.info('Starting AUC daemon')
     state = AucState()
     Path(config.log_path).mkdir(parents=True, exist_ok=True)
 
