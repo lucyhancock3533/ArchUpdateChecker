@@ -23,7 +23,7 @@ def clear_reboot(logger):
 
 
 def get_updates(logger):
-    r = requests.post('http+unix://%2Ftmp%2F.auc_socket/', json={'function': 'clear-reboot'})
+    r = requests.post('http+unix://%2Ftmp%2F.auc_socket/', json={'function': 'updates'})
     if r.status_code == 200:
         for k, v in r.json()['updates'].items():
             logger.info('%s from %s to %s' % (k, v['old'], v['new']))
