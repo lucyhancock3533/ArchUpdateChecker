@@ -42,6 +42,9 @@ class AUCRequestHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(json.dumps(resp).encode('UTF-8'))
 
+    def log_message(self, format, *args):
+        message = format % args
+        self.server.logger.debug('Request [%s] %s' % (self.log_date_time_string(), message))
 
 
 class DaemonListener:
