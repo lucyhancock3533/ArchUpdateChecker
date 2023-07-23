@@ -1,7 +1,5 @@
 import socketserver
 
-from http.server import BaseHTTPRequestHandler
-
 
 class UnixHTTPServer(socketserver.UnixStreamServer):
     def __init__(self, server_address, handler, state, logger, secret):
