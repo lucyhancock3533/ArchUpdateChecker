@@ -13,6 +13,3 @@ class UnixHTTPServer(socketserver.UnixStreamServer):
     def get_request(self):
         request, client_address = super(UnixHTTPServer, self).get_request()
         return request, ["local", 0]
-
-    def finish_request(self, request, client_address):
-        self.RequestHandlerClass(request, client_address, self)

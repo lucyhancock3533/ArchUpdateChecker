@@ -9,33 +9,27 @@ from auc.daemon.util.unix_http import UnixHTTPServer
 
 
 class AUCRequestHandler(BaseHTTPRequestHandler):
-    def __init__(self, request, client_address, server):
-        super().__init__(request, client_address, server)
-        self.state = server.state
-        self.logger = server.logger
-        self.secret = server.secret
-
     def do_POST(self):
-        body = self.rfile.read(self.headers['Content-Length'])
+        body = self.rfile.read(int(self.headers['Content-Length']))
         req = json.loads(body.decode('UTF-8'))
         self.send_header('Content-type', 'application/json')
         self.end_headers()
         if 'function' not in req:
-            self.logger.error('[LISTENER] Requested operation from client not valid')
+            self.server.logger.error('[LISTENER] Requested operation from client not valid')
             err = {'error': 'Function not specified'}
             self.wfile.write(json.dumps(err).encode('UTF-8'))
             self.send_error(404)
             return
 
         if req['function'] not in func.keys():
-            self.logger.error('[LISTENER] Requested operation from client not valid')
+            self.server.logger.error('[LISTENER] Requested operation from client not valid')
             err = {'error': f'Invalid function {req["function"]}'}
             self.wfile.write(json.dumps(err).encode('UTF-8'))
             self.send_error(404)
             return
 
-        self.logger.info('[LISTENER] Executing %s' % req['function'])
-        resp = func[req['function']](self.state)
+        self.server.logger.info('[LISTENER] Executing %s' % req['function'])
+        resp = func[req['function']](self.server.state)
         if resp is None:
             err = {'error': 'Function not allowed'}
             self.wfile.write(json.dumps(err).encode('UTF-8'))
