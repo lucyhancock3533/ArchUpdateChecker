@@ -8,7 +8,7 @@ from auc.cli.main import add_subparser as cli_subparse, run_cli
 
 
 def version(args, logger):
-    logger.info('AUC v1.1.0')
+    logger.info('AUC v1.2.0')
 
 
 log_levels = {'error': logging.ERROR, 'warning': logging.WARNING, 'info': logging.INFO, 'debug': logging.DEBUG}
