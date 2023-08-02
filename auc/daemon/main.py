@@ -1,6 +1,8 @@
 import subprocess
+import sys
 import time
 import logging
+from argparse import ArgumentParser
 
 from threading import Thread
 from pathlib import Path
@@ -13,9 +15,14 @@ from auc.daemon.state import AucState
 from auc.daemon.mirrorlist import MirrorlistUpdate
 from auc.daemon.pacman_updater import PacmanUpdater
 
+log_levels = {'error': logging.ERROR, 'warning': logging.WARNING, 'info': logging.INFO, 'debug': logging.DEBUG}
 
-def add_subparser(subparser):
-    subparser.add_argument('--config', type=str, default='/etc/auc.yaml', nargs='?')
+
+def add_parser():
+    parser = ArgumentParser()
+    parser.add_argument('--log-level', type=str, default='info', nargs='?', choices=log_levels.keys())
+    parser.add_argument('--config', type=str, default='/etc/auc.yaml', nargs='?')
+    return parser.parse_args()
 
 
 def check_network(ping_addr, logger):
@@ -123,3 +130,15 @@ def run_daemon(args, logger):
     except KeyboardInterrupt:
         logger.info('Exiting')
         Path('/tmp/.auc_secret').unlink(missing_ok=True)
+
+
+def run():
+    args = add_parser()
+
+    log_format = '[AUC] [%(levelname)s] %(message)s'
+    logging.basicConfig(level=log_levels[args.log_level],
+                        handlers=[logging.StreamHandler(sys.stdout)],
+                        format=log_format)
+    logger = logging.getLogger(name="auc")
+
+    run_daemon(args, logger)

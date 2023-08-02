@@ -1,5 +1,15 @@
+import logging
+import sys
+from argparse import ArgumentParser
+
 import requests
 import requests_unixsocket
+
+log_levels = {'error': logging.ERROR, 'warning': logging.WARNING, 'info': logging.INFO, 'debug': logging.DEBUG}
+
+
+def version(logger):
+    logger.info('AUC v1.2.0')
 
 
 def get_status(logger):
@@ -33,13 +43,28 @@ def get_updates(logger):
         logger.error('Unknown error')
 
 
-def add_subparser(subparser):
-    subparser.add_argument('clicmd', type=str, choices=cmds.keys())
+def add_parser():
+    parser = ArgumentParser()
+    parser.add_argument('--log-level', type=str, default='info', nargs='?', choices=log_levels.keys())
+    parser.add_argument('clicmd', type=str, choices=cmds.keys())
+    return parser.parse_args()
 
 
 def run_cli(args, logger):
     requests_unixsocket.monkeypatch()
     cmds[args.clicmd](logger)
+
+
+def run():
+    args = add_parser()
+
+    log_format = '[AUC] [%(levelname)s] %(message)s'
+    logging.basicConfig(level=log_levels[args.log_level],
+                        handlers=[logging.StreamHandler(sys.stdout)],
+                        format=log_format)
+    logger = logging.getLogger(name="auc")
+
+    run_cli(args, logger)
 
 
 cmds = {'status': get_status, 'updates': get_updates, 'clear-reboot':  clear_reboot}
