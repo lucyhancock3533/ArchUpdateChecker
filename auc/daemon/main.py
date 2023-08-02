@@ -83,6 +83,7 @@ def run_daemon(args, logger):
 
                 # Do updates
                 if state.access_state('update'):
+                    state.set_state('msg', 'Checking for updates')
                     p = PacmanUpdater(logger, config.log_path)
                     logger.info('Updating pacman database')
                     try:
@@ -102,6 +103,7 @@ def run_daemon(args, logger):
                         updates = {}
 
                     if len(updates.keys()) > 0:
+                        state.set_state('msg', 'Installing updates')
                         logger.info('Performing updates')
                         logger.info('Updates available:')
                         [logger.info('%s %s ->  %s' % (x, y['old'], y['new'])) for x, y in updates.items()]

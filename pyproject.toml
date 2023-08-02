@@ -12,10 +12,12 @@ pyyaml = "^6.0"
 pythonping = "^1.1.4"
 requests-unixsocket = "^0.3.0"
 urllib3 = "1.26.16"
+pygobject = "^3.44.1"
 
 [tool.poetry.scripts]
 auc = "auc.cli.main:run"
 aucd = "auc.daemon.main:run"
+aucp = "auc.prompt.main:run"
 
 
 [build-system]
