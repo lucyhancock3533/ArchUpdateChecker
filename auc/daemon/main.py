@@ -123,7 +123,7 @@ def run_daemon(args, logger):
                     state.set_state('rebootrequired', True)
                     state.set_state('prompt', True)
                 else:
-                    state.set_state('msg', 'Nothing to do')
+                    state.set_state('msg', 'No updates available')
 
                 # Set status inactive
                 state.set_state('inprogress', False)
@@ -145,3 +145,7 @@ def run():
     logger = logging.getLogger(name="auc")
 
     run_daemon(args, logger)
+
+
+if __name__ == '__main__':
+    run()
