@@ -83,7 +83,7 @@ def clear_reboot(state):
 
 
 def get_prompt(state):
-    if not state.access_state('prompt') and not state.access_state('inprogess'):
+    if not state.access_state('prompt') and not state.access_state('inprogress'):
         return {'error': 'notrequired'}
     if state.access_state('prompt'):
         return {'prompt': state.access_state('msg')}
