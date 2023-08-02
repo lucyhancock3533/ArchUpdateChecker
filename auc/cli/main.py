@@ -11,7 +11,7 @@ log_levels = {'error': logging.ERROR, 'warning': logging.WARNING, 'info': loggin
 
 
 def version(logger):
-    logger.info('AUC v1.2.0')
+    logger.info('AUC v1.3.0')
 
 
 def status_cmd(logger):
@@ -70,3 +70,6 @@ def run():
 
 
 cmds = {'status': status_cmd, 'updates': updates_cmd, 'clear-reboot':  clear_reboot}
+
+if __name__ == '__main__':
+    run()
