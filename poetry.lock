@@ -140,17 +140,6 @@ files = [
 pycairo = ">=1.16,<2.0"
 
 [[package]]
-name = "pythonping"
-version = "1.1.4"
-description = "A simple way to ping in Python"
-optional = false
-python-versions = "*"
-files = [
-    {file = "pythonping-1.1.4-py3-none-any.whl", hash = "sha256:dedd690e36cb8c69703175610cf6ce01ff0c2070b447cc64c31a82951c9a53f6"},
-    {file = "pythonping-1.1.4.tar.gz", hash = "sha256:acef84640fee6f20b725f2a1d2392771f2845554cfabcef30b1fdea5030161af"},
-]
-
-[[package]]
 name = "pyyaml"
 version = "6.0.1"
 description = "YAML parser and emitter for Python"
@@ -253,4 +242,4 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "c8661189cdcbdd3952e72b5e99ae0c71f78206269096d4813017c3713756cd6d"
+content-hash = "d711a4a332b40aa1014372ae21985cc712170fc08d906050448c3c93ee7d49f4"
