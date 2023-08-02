@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "auc"
-version = "1.1.0"
-description = ""
+version = "1.2.0"
+description = "A tool for checking for pacman based distro updates. It's probably really bad."
 authors = ["Lucy Hancock <lucy@leh.dev>"]
 readme = "README.md"
 
@@ -9,12 +9,14 @@ readme = "README.md"
 python = "^3.11"
 requests = "^2.31.0"
 pyyaml = "^6.0"
-pythonping = "^1.1.4"
 requests-unixsocket = "^0.3.0"
 urllib3 = "1.26.16"
+pygobject = "^3.44.1"
 
 [tool.poetry.scripts]
-auc = "auc.main:run"
+auc = "auc.cli.main:run"
+aucd = "auc.daemon.main:run"
+aucp = "auc.prompt.main:run"
 
 
 [build-system]
