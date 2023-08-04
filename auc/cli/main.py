@@ -11,7 +11,7 @@ log_levels = {'error': logging.ERROR, 'warning': logging.WARNING, 'info': loggin
 
 
 def version(logger):
-    logger.info('AUC v1.3.1')
+    logger.info('AUC v1.4.0')
 
 
 def status_cmd(logger):
