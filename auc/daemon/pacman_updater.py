@@ -1,5 +1,4 @@
 import subprocess
-from datetime import datetime
 
 from auc.daemon.util.logger_io import LoggerIO
 
@@ -15,6 +14,7 @@ class PacmanUpdater:
         log_out = LoggerIO(self.logger, 'pacman')
         for i in iter(lambda: paccmd.stdout.read(1), ""):
             log_out.write(i)
+        paccmd.wait()
         if paccmd.returncode != 0:
             raise subprocess.CalledProcessError(paccmd.returncode, paccmd.args)
 
@@ -26,8 +26,6 @@ class PacmanUpdater:
             split_updates = [x.split(' ') for x in updates_list if len(x) > 1]
             return {x[0]: {'old': x[1], 'new': x[3]} for x in split_updates}
         except subprocess.CalledProcessError as e:
-            li = LoggerIO(self.logger, 'pacman err')
-            li.write_full(e.stderr)
             raise e
 
     def do_updates(self):
@@ -37,5 +35,6 @@ class PacmanUpdater:
         log_out = LoggerIO(self.logger, 'pacman')
         for i in iter(lambda: paccmd.stdout.read(1), ""):
             log_out.write(i)
+        paccmd.wait()
         if paccmd.returncode != 0:
             raise subprocess.CalledProcessError(paccmd.returncode, paccmd.args)
