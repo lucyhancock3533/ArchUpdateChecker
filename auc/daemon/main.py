@@ -10,8 +10,8 @@ from pathlib import Path
 from datetime import datetime
 
 from auc.daemon.listener import DaemonListener
-from auc.daemon.config import AucConfig
-from auc.daemon.state import AucState
+from auc.daemon.util.config import AucConfig
+from auc.daemon.util.state import AucState
 from auc.daemon.mirrorlist import MirrorlistUpdate
 from auc.daemon.pacman_updater import PacmanUpdater
 from auc.daemon.yay_updater import YayUpdater
@@ -21,7 +21,7 @@ log_levels = {'error': logging.ERROR, 'warning': logging.WARNING, 'info': loggin
 
 def add_parser():
     parser = ArgumentParser()
-    parser.add_argument('--log-level', type=str, default='info', nargs='?', choices=log_levels.keys())
+    parser.add_argument('--log-level', type=str, default='debug', nargs='?', choices=log_levels.keys())
     parser.add_argument('--config', type=str, default='/etc/auc.yaml', nargs='?')
     return parser.parse_args()
 
@@ -53,13 +53,14 @@ def run_daemon(args, logger):
         while True:
             logger.debug('Running main loop')
             if state.access_state('inprogress'):
+                state.set_state('msg', 'Running updates')
                 network = False
                 state.set_state('msg', 'Waiting for network connection')
                 logger.info('Checking for network connection')
                 while not network:
                     network = check_network(config.ping_addr)
                     if not network:
-                        time.sleep(60)
+                        time.sleep(15)
 
                 did_something = False
                 logger.info('Executing updates')
@@ -129,7 +130,7 @@ def run_daemon(args, logger):
                 state.set_state('inprogress', False)
                 logger.info('Updates completed')
 
-            time.sleep(300)
+            time.sleep(15)
     except KeyboardInterrupt:
         logger.info('Exiting')
         Path('/tmp/.auc_secret').unlink(missing_ok=True)
