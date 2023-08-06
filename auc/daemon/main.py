@@ -21,7 +21,7 @@ log_levels = {'error': logging.ERROR, 'warning': logging.WARNING, 'info': loggin
 
 def add_parser():
     parser = ArgumentParser()
-    parser.add_argument('--log-level', type=str, default='debug', nargs='?', choices=log_levels.keys())
+    parser.add_argument('--log-level', type=str, default='info', nargs='?', choices=log_levels.keys())
     parser.add_argument('--config', type=str, default='/etc/auc.yaml', nargs='?')
     return parser.parse_args()
 
