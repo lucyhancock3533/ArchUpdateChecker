@@ -115,6 +115,7 @@ def run_daemon(args, logger):
                             state.set_state('inprogress', False)
                             state.set_state('prompt', True)
                             state.set_state('msg', 'Failed to install pacman updates, see logs for more detail')
+                            logger.error('Failed to install updates')
                             continue
                         did_something = True
                     state.set_state('update', False)
@@ -129,6 +130,7 @@ def run_daemon(args, logger):
                 # Set status inactive
                 state.set_state('inprogress', False)
                 logger.info('Updates completed')
+                logger.critical('{ENDWATCH}')
 
             time.sleep(15)
     except KeyboardInterrupt:

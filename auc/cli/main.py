@@ -1,3 +1,4 @@
+import json
 import logging
 import sys
 from argparse import ArgumentParser
@@ -59,10 +60,10 @@ def updates_cmd(logger):
 def do_updates(logger):
     secret = load_secret(logger)
     listener = LogListener()
-    r = connect_listener(secret, listener.socket_path, listener.secret)
+    r = connect_listener(secret, listener.socket_path)
     if r.status_code == 200:
         if r.json()['success']:
-            logging.debug('Set update flag')
+            logging.debug('Connected aucd logger')
     elif 'error' in r.json():
         logger.error(r.json()['error'])
         return
@@ -82,7 +83,7 @@ def do_updates(logger):
     r = set_run(secret)
     if r.status_code == 200:
         if r.json()['success']:
-            logging.debug('Set update flag')
+            logging.debug('Set run flag')
     elif 'error' in r.json():
         logger.error(r.json()['error'])
         return
@@ -90,19 +91,41 @@ def do_updates(logger):
         logger.error('Unknown error')
         return
 
-    conn = listener.get_connection()
+    log_watcher(logger, listener)
+
+
+def connect_logger(logger):
+    secret = load_secret(logger)
+    listener = LogListener()
+    r = connect_listener(secret, listener.socket_path)
+    if r.status_code == 200:
+        if r.json()['success']:
+            logging.debug('Connected aucd logger')
+    elif 'error' in r.json():
+        logger.error(r.json()['error'])
+        return
+    else:
+        logger.error('Unknown error')
+        return
+
+    log_watcher(logger, listener)
+
+
+def log_watcher(logger, listener):
     logger.info('Connected to aucd')
+    conn = listener.get_connection()
     try:
         while True:
-            logger.info(conn.recv())
+            d = json.loads(conn.recv_bytes().decode())
+            if d['msg'] is not None:
+                if '{ENDWATCH}' in d['msg']:
+                    break
+                if '[LISTENER]' not in d['msg']:
+                    logger.info(d['msg'])
     except (EOFError, KeyboardInterrupt):
         conn.close()
         listener.close_socket()
         exit(0)
-
-
-def run_updates(logger):
-    pass
 
 
 def add_parser():
@@ -129,7 +152,13 @@ def run():
     run_cli(args, logger)
 
 
-cmds = {'status': status_cmd, 'updates': updates_cmd, 'clear-reboot':  clear_reboot, 'update': do_updates}
+cmds = {
+    'status': status_cmd,
+    'updates': updates_cmd,
+    'clear-reboot':  clear_reboot,
+    'update': do_updates,
+    'watch': connect_logger
+}
 
 if __name__ == '__main__':
     run()
