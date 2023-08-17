@@ -1,23 +1,19 @@
 _name="auc"
 pkgname="auc"
-pkgver=1.4.0-dev
-pkgrel=1
+pkgver=1.4.0
+pkgrel=0
 pkgdesc="A tool for checking for pacman based distro updates. It's probably really bad."
 arch=('x86_64')
 url="https://github.com/lucyhancock3533/ArchUpdateChecker"
 depends=('python-requests' 'python-yaml' 'python-requests-unixsocket' 'python-urllib3' 'python-gobject' 'gtk4' 'libadwaita')
 makedepends=('python-poetry-core' 'python-build' 'python-installer' 'python-wheel')
-source=("auc::git+https://github.com/lucyhancock3533/ArchUpdateChecker.git#tag=v1.3.1")
-sha256sums=('SKIP')
 
 build() {
-  cd auc
-
+  cd ..
   python -m build --wheel --no-isolation
 }
 
 package() {
-  cd auc
-
+  cd ..
   python -m installer --destdir="$pkgdir" dist/*.whl
 }
