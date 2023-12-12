@@ -11,8 +11,6 @@ mirrorlistAddress = "https://www.archlinux.org/mirrorlist/?country=all&protocol=
 
 #mlp = subprocess.Popen(["/usr/bin/gksudo", "/usr/bin/wget -O /etc/pacman.d/mirrorlist \"" + mirrorlistAddress + "\""]) # Update pacman mirrorlist
 #mlp.wait()
-#mlr = subprocess.Popen(["/usr/bin/gksudo", "/usr/bin/sed -i 's/#S/S/g' /etc/pacman.d/mirrorlist"]) # Replace #S on auto-generated mirrorlist
-#mlr.wait()
 syncDB() # Update pacman database
 if (getUpdateCount() > 0):
     notify = UpdateNotificationWindow("<big>" + str(getUpdateCount()) + " updates are available</big>") # Alert user to updates
