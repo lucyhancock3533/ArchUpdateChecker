@@ -8,9 +8,9 @@ Requirements:
 * Dependencies are managed by poetry for dev
 
 Usage:
-* Start daemon `auc daemon`
+* Start daemon `aucd`
   * `--config` Overrise config file location (Usually /etc/auc.yaml)
-* Status cli `auc cli <command>`
+* Interactive cli `auc <command>`
   * Commands
     * `status` Gets current status of updater
     * `updates` Get updates performed
