@@ -31,6 +31,7 @@ def run_daemon(args, logger):
 
                 # Update mirrorlist
                 if config.update_mr and state.access_state('mirrorlist'):
+                    state.set_state('msg', 'Updating mirrorlist')
                     mrl = MirrorlistUpdate(config.mr_url, logger)
                     mrl.update_mirrorlist()
                     state.set_state('mirrorlist', False)
