@@ -19,12 +19,13 @@ def run_auc():
     else:
         return False
 
-mirrorlist = getMrlUrl()
-if(mirrorlist == ""): # If mirrorlist url not set, prompt
-    mlget = MirrorlistSettingsWindow()
-    mlget.connect("delete-event", Gtk.main_quit)
-    mlget.show_all()
-    Gtk.main()
-else:
-    if(run_auc()):
+if(__name__ == "__main__"):
+    mirrorlist = getMrlUrl()
+    if(mirrorlist == ""): # If mirrorlist url not set, prompt
+        mlget = MirrorlistSettingsWindow()
+        mlget.connect("delete-event", Gtk.main_quit)
+        mlget.show_all()
         Gtk.main()
+    else:
+        if(run_auc()):
+            Gtk.main()
