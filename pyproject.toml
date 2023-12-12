@@ -7,11 +7,11 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-requests = "^2.18.0"
+requests = "^2.31.0"
 pyyaml = "^6.0"
-pythonping = "^1.1.1"
+pythonping = "^1.1.4"
 requests-unixsocket = "^0.3.0"
-urllib3 = "1.26.15"
+urllib3 = "1.26.16"
 
 [tool.poetry.scripts]
 auc = "auc.main:run"
