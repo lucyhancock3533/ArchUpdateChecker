@@ -10,3 +10,4 @@ def run_cli(args, logger):
         secret = f.read()
     client = Client('/tmp/.auc_socket', family='AF_UNIX', authkey=secret.encode())
     client.send('test')
+    client.close()
