@@ -8,7 +8,7 @@ Requirements:
 * PyGObject (Not required for CLI)
 * sudo
 * pacman package manager
-* Python requests package (installed globally)
+* Python requests package
 
 To run with GTK, execute auc.py. AUC should be ran as a normal user, not as root.
 
