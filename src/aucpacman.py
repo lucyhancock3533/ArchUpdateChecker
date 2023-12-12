@@ -19,7 +19,7 @@ def get_update_count(): # Get number of packages needing updates
             count = count + 1
     return count
 
-def get_ignored_count(): # Get number of packages needing updates
+def get_ignore_count(): # Get number of packages needing updates
     """Retrives number of updates available"""
     updates = os.popen("pacman -Qnu")
     updates = updates.read().splitlines()
