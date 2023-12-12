@@ -2,6 +2,7 @@
 """AUC Main module, syncs, checks for updates, and alerts user."""
 
 import gi
+#import subprocess
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from aucgtk import UpdateNotificationWindow
