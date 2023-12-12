@@ -11,3 +11,7 @@ def get_updates():
 
 def get_prompt():
     return requests.post('http+unix://%2Ftmp%2F.auc_socket/', json={'function': 'prompt'})
+
+
+def set_no_reboot():
+    return requests.post('http+unix://%2Ftmp%2F.auc_socket/', json={'function': 'clear-reboot'})
