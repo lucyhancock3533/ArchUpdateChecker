@@ -12,20 +12,22 @@ class AUCRequestHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         body = self.rfile.read(int(self.headers['Content-Length']))
         req = json.loads(body.decode('UTF-8'))
-        self.send_header('Content-type', 'application/json')
-        self.end_headers()
         if 'function' not in req:
             self.server.logger.error('[LISTENER] Requested operation from client not valid')
             err = {'error': 'Function not specified'}
-            self.wfile.write(json.dumps(err).encode('UTF-8'))
             self.send_error(404)
+            self.send_header('Content-type', 'application/json')
+            self.end_headers()
+            self.wfile.write(json.dumps(err).encode('UTF-8'))
             return
 
         if req['function'] not in func.keys():
             self.server.logger.error('[LISTENER] Requested operation from client not valid')
             err = {'error': f'Invalid function {req["function"]}'}
-            self.wfile.write(json.dumps(err).encode('UTF-8'))
             self.send_error(404)
+            self.send_header('Content-type', 'application/json')
+            self.end_headers()
+            self.wfile.write(json.dumps(err).encode('UTF-8'))
             return
 
         self.server.logger.info('[LISTENER] Executing %s' % req['function'])
@@ -35,8 +37,11 @@ class AUCRequestHandler(BaseHTTPRequestHandler):
             self.wfile.write(json.dumps(err).encode('UTF-8'))
             self.send_response(403)
             return
-        self.wfile.write(json.dumps(resp).encode('UTF-8'))
         self.send_response(200)
+        self.send_header('Content-type', 'application/json')
+        self.end_headers()
+        self.wfile.write(json.dumps(resp).encode('UTF-8'))
+
 
 
 class DaemonListener:
