@@ -132,7 +132,8 @@ class MirrorlistSettingsWindow(Gtk.Window):
     def set_mirrorlist(self, parent):
         setMrlUrl(self.textbuffer.get_text(self.textbuffer.get_iter_at_line(0), self.textbuffer.get_iter_at_line(self.textbuffer.get_line_count()), True))
         self.hide()
-        run_auc()
+        if(not run_auc()):
+            Gtk.main_quit()
 
 def run_auc():
     # update mirrorlist here
