@@ -13,14 +13,14 @@ class DaemonListener:
         self._init_secret()
         Path('/tmp/.auc_socket').unlink(missing_ok=True)
         self.listener = Listener('/tmp/.auc_socket', family='AF_UNIX', authkey=self.secret.encode())
-        os.chmod('/tmp/.auc_secret', 0o644)
+        os.chmod('/tmp/.auc_socker', 0o777)
 
     def _init_secret(self):
         self.secret = secrets.token_hex(nbytes=512)
         Path('/tmp/.auc_secret').unlink(missing_ok=True)
         with open('/tmp/.auc_secret', 'w') as f:
             f.write(self.secret)
-        os.chmod('/tmp/.auc_secret', 0o777)
+        os.chmod('/tmp/.auc_secret', 0o644)
 
     def listen_loop(self):
         self.logger.info('[LISTENER] Starting daemon listener')
