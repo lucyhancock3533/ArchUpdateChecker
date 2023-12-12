@@ -24,10 +24,9 @@ class DaemonListener:
             while True:
                 conn = self.listener.accept()
                 while True:
+                    self.logger.debug("New connection accepted")
                     try:
                         msg = conn.recv()
-                        print(msg)
-                        conn.send('recv')
                     except EOFError:
                         conn.close()
                         break
