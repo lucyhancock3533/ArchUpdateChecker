@@ -1,4 +1,5 @@
 #! /usr/bin/python3
+"""AUC pacman module, deals with interacting with the pacman command"""
 
 import subprocess, os, sys
 
