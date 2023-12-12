@@ -66,4 +66,4 @@ def get_updates(state):
     return state.access_state('updates')
 
 
-func = {'status': get_status, 'prompt': get_prompt, 'updates': get_updates, 'clear-reboot': None}
+func = {'status': get_status, 'prompt': get_prompt, 'updates': get_updates, 'clear-reboot': clear_reboot}
