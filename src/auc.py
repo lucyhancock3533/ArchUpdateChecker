@@ -9,11 +9,12 @@ class MessageDialogWindow(Gtk.Window):
         box = Gtk.Box(spacing=6)
         self.add(box)
         label = Gtk.Label()
-        label.set_markup("<big>" + str(getUpdates()) + " updates are available</big>")
         box.add(label)
+        label.set_markup("<big>" + str(getUpdates()) + " updates are available</big>")
 
 syncDB()
-win = MessageDialogWindow()
-win.connect("delete-event", Gtk.main_quit)
-win.show_all()
-Gtk.main()
+if (getUpdates() > 0):
+    win = MessageDialogWindow()
+    win.connect("delete-event", Gtk.main_quit)
+    win.show_all()
+    Gtk.main()
