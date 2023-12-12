@@ -3,6 +3,7 @@ import time
 
 from threading import Thread
 from pathlib import Path
+from pythonping import ping
 
 from auc.daemon.listener import DaemonListener
 from auc.daemon.config import AucConfig
@@ -31,6 +32,12 @@ def run_daemon(args, logger):
         while True:
             logger.debug('Running main loop')
             if state.access_state('inprogress'):
+                logger.info('Checking for internet connection')
+                res = ping(target=config.ping_addr, count=1)
+                while not res.success():
+                    time.sleep(60)
+                    res = ping(target=config.ping_addr, count=1)
+
                 did_something = False
                 logger.info('Executing updates')
 
