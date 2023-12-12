@@ -20,28 +20,22 @@ class DaemonListener:
             f.write(self.secret)
 
     def listen_loop(self):
-        try:
-            self.logger.info('[LISTENER] Starting daemon listener')
+        self.logger.info('[LISTENER] Starting daemon listener')
+        while True:
+            conn = self.listener.accept()
             while True:
-                conn = self.listener.accept()
-                while True:
-                    self.logger.debug("[LISTENER] New connection accepted")
-                    try:
-                        msg = conn.recv()
-                        if msg not in func.keys():
-                            self.logger.error('[LISTENER] Requested operation from client not valid')
-                            conn.send('err:notvalid')
-                        else:
-                            self.logger.info('[LISTENER] Executing %s' % msg)
-                            conn.send(func[msg](self.state))
-                    except EOFError:
-                        conn.close()
-                        break
-        except KeyboardInterrupt:
-            self.listener.close()
-            Path('/tmp/.auc_socket').unlink(missing_ok=True)
-            Path('/tmp/.auc_secret').unlink(missing_ok=True)
-            self.logger.info('Stopping listener')
+                self.logger.debug("[LISTENER] New connection accepted")
+                try:
+                    msg = conn.recv()
+                    if msg not in func.keys():
+                        self.logger.error('[LISTENER] Requested operation from client not valid')
+                        conn.send('err:notvalid')
+                    else:
+                        self.logger.info('[LISTENER] Executing %s' % msg)
+                        conn.send(func[msg](self.state))
+                except EOFError:
+                    conn.close()
+                    break
 
 
 def get_status(state):
