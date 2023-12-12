@@ -5,10 +5,10 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from aucgtk import MirrorlistSettingsWindow, run_auc
-from aucpmml import getMrlUrl
+from aucpmml import get_mrl_url
 
 if(__name__ == "__main__"):
-    mirrorlist = getMrlUrl()
+    mirrorlist = get_mrl_url()
     if(mirrorlist == ""): # If mirrorlist url not set, prompt
         mlget = MirrorlistSettingsWindow()
         mlget.connect("delete-event", Gtk.main_quit)

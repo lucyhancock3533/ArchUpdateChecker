@@ -4,7 +4,7 @@
 import os
 from pathlib import Path
 
-def getMrlUrl():
+def get_mrl_url():
     """Opens config and get mirrorlist url"""
     try: # Catch if file does not yet exist
         with open(os.path.expanduser("~/.auc/mirrorlist.conf")) as file:
@@ -19,12 +19,12 @@ def getMrlUrl():
     except FileNotFoundError:
         return "" # Return blank on error
 
-def setMrlUrl(newUrl):
+def set_mrl_url(new_url):
     """Save config of mirrorlist url"""
-    configFolder = Path(os.path.expanduser("~/.auc/"))
-    configFolder.mkdir(parents=True, exist_ok=True) # Ensure folder exists
+    config_folder = Path(os.path.expanduser("~/.auc/"))
+    config_folder.mkdir(parents=True, exist_ok=True) # Ensure folder exists
     file = open(os.path.expanduser("~/.auc/mirrorlist.conf"), 'w')
     file.write('1\n')
-    file.write(newUrl)
+    file.write(new_url)
     file.write('\n')
     file.close() # Write settings to file
