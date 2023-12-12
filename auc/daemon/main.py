@@ -1,8 +1,11 @@
 import subprocess
 import time
+import logging
 
 from threading import Thread
 from pathlib import Path
+from pythonping import ping
+from datetime import datetime
 
 from auc.daemon.listener import DaemonListener
 from auc.daemon.config import AucConfig
@@ -15,9 +18,20 @@ def add_subparser(subparser):
     subparser.add_argument('--config', type=str, default='/etc/auc.yaml', nargs='?')
 
 
+def check_network(ping_addr, logger):
+    logger.debug('Pinging %s', ping_addr)
+    res = ping(target=ping_addr, count=1)
+    while not res.success():
+        time.sleep(60)
+        logger.debug('Pinging %s', ping_addr)
+        res = ping(target=ping_addr, count=1)
+
+
 def run_daemon(args, logger):
-    logger.info('Starting AUC daemon')
     config = AucConfig(args.config, logger)
+    if config.file_log:
+        logger.addHandler(logging.FileHandler(f'{config.log_path}/auc_{datetime.today().strftime("%Y-%m-%d")}.log'))
+    logger.info('Starting AUC daemon')
     state = AucState()
     Path(config.log_path).mkdir(parents=True, exist_ok=True)
 
@@ -31,8 +45,20 @@ def run_daemon(args, logger):
         while True:
             logger.debug('Running main loop')
             if state.access_state('inprogress'):
+                network = False
+                state.set_state('msg', 'Waiting for network connection')
+                logger.info('Checking for network connection')
+                while not network:
+                    try:
+                        check_network(config.ping_addr, logger)
+                        network = True
+                    except OSError:
+                        logger.debug('No network connection')
+                        time.sleep(60)
+
                 did_something = False
                 logger.info('Executing updates')
+                state.set_state('msg', 'Updates in progress')
 
                 # Update mirrorlist
                 if config.update_mr and state.access_state('mirrorlist'):
