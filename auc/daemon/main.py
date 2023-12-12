@@ -78,6 +78,7 @@ def run_daemon(args, logger):
                         state.set_state('inprogress', False)
                         state.set_state('prompt', True)
                         state.set_state('msg', 'Failed to update mirror list')
+                        logger.critical('{ENDWATCH}')
                         continue
 
                 # Do updates
@@ -95,6 +96,7 @@ def run_daemon(args, logger):
                         state.set_state('inprogress', False)
                         state.set_state('prompt', True)
                         state.set_state('msg', 'Failed to sync pacman DB, see logs for more detail')
+                        logger.critical('{ENDWATCH}')
                         continue
 
                     try:
@@ -116,6 +118,7 @@ def run_daemon(args, logger):
                             state.set_state('prompt', True)
                             state.set_state('msg', 'Failed to install pacman updates, see logs for more detail')
                             logger.error('Failed to install updates')
+                            logger.critical('{ENDWATCH}')
                             continue
                         did_something = True
                     state.set_state('update', False)
