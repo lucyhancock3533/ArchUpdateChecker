@@ -6,8 +6,7 @@ import os
 
 def sync_db(): # Invoke pacman and update package database
     """Updates pacman database"""
-    sync_process = subprocess.Popen(["/usr/bin/gksudo", "/usr/bin/pacman -Syy"])
-    sync_process.wait()
+    subprocess.check_output(["/usr/bin/gksudo", "/usr/bin/pacman -Syy"])
 
 def get_update_count(): # Get number of packages needing updates
     """Retrives number of updates available"""
