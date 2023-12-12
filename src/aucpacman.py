@@ -31,7 +31,7 @@ def get_ignore_count(): # Get number of packages needing updates
 def run_updates(): # Run pacman and update system
     """Executes pacman command to update"""
     updates = subprocess.Popen( \
-        ["/usr/bin/gksudo", "/usr/bin/pacman -Su --noconfirm --noprogressbar"] \
+        ["/usr/bin/gksudo", "/usr/bin/pacman -Su --noconfirm"] \
         , stdout=subprocess.PIPE)
     return updates
 
