@@ -8,7 +8,7 @@ from aucpacman import get_updates, run_updates, get_update_count, sync_db
 from subprocess import CalledProcessError
 from pathlib import Path
 from datetime import datetime
-from aucpmml import set_mrl_url
+from aucpmml import set_mrl_url, update_mrl
 
 class MessageNotificationWindow(Gtk.Window):
     """Window for displaying message to user"""
@@ -137,8 +137,8 @@ class MirrorlistSettingsWindow(Gtk.Window):
             Gtk.main_quit()
 
 def run_auc():
-    # update mirrorlist here
-    syncDB() # Update pacman database
+    update_mrl() # update mirrorlist here
+    sync_db() # Update pacman database
     if (get_update_count() > 0):
         notify = UpdateNotificationWindow("<big>" + str(get_update_count()) + " updates are available</big>") # Alert user to updates
         notify.connect("delete-event", Gtk.main_quit)
