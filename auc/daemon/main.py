@@ -21,6 +21,7 @@ def run_daemon(args, logger):
     logger.info('Starting listener')
     listener = DaemonListener(args, logger, state)
     lt = Thread(target=listener.listen_loop)
+    lt.start()
 
     try:
         while True:
