@@ -1,7 +1,7 @@
 import subprocess, os, sys
 
 def syncDB():
-    syncProcess = subprocess.Popen(["/usr/bin/sudo", "/usr/bin/pacman", "-Syy"])
+    syncProcess = subprocess.Popen(["/usr/bin/pacman", "-Syy"])
     syncProcess.wait()
     if syncProcess.returncode == 0:
         print("Database syncronised")
@@ -10,9 +10,10 @@ def syncDB():
         quit(1)
 
 def getUpdates():
-    updates = os.popen("sudo pacman -Qnu | wc -l")
+    updates = os.popen("pacman -Qnu | wc -l")
     updCount = int(updates.read())
-    print(updCount)
+    print(str(updCount) + " updates are available")
+    return updCount
 
 syncDB()
 getUpdates()
