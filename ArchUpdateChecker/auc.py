@@ -17,7 +17,7 @@ modes = {'version': version, 'daemon': run_daemon}
 def run():
     parser = ArgumentParser()
     parser.add_argument('--log-level', type=str, default='info', nargs='?', choices=log_levels.keys())
-    cmd_sub = parser.add_subparsers(dest='mode')
+    cmd_sub = parser.add_subparsers(dest='mode', required=True)
     cmd_sub.add_parser(name='version')
     daemon_sub = cmd_sub.add_parser(name='daemon')
     daemon_subparse(daemon_sub)
