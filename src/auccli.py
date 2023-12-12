@@ -14,7 +14,7 @@ def run_auc_cli():
         run_auc()
 
 def run_auc():
-    sync_db("/usr/bin/sudo")
+    sync_db(["/usr/bin/sudo", "pacman", "-Sy"])
     print(str(get_update_count()) + " updates are available, " + str(get_ignore_count())\
     + " updates are ignored")
     if (get_update_count() > 0):
@@ -28,6 +28,6 @@ def prompt_updates():
         do_updates()
 
 def do_updates():
-    update_pipe = run_updates("/usr/bin/sudo")
+    update_pipe = run_updates(["/usr/bin/sudo", "pacman", "-Su"])
     for line in update_pipe.stdout: # Update text view
         print(line.decode("utf-8"))

@@ -4,9 +4,9 @@
 import subprocess
 import os
 
-def sync_db(sudo): # Invoke pacman and update package database
+def sync_db(cmd): # Invoke pacman and update package database
     """Updates pacman database"""
-    subprocess.check_output([sudo, "pacman -Syy"])
+    subprocess.check_output(cmd)
 
 def get_update_count(): # Get number of packages needing updates
     """Retrives number of updates available"""
@@ -28,10 +28,10 @@ def get_ignore_count(): # Get number of packages needing updates
             count = count + 1
     return count
 
-def run_updates(sudo): # Run pacman and update system
+def run_updates(cmd): # Run pacman and update system
     """Executes pacman command to update"""
     updates = subprocess.Popen( \
-        [sudo, "pacman -Su --noconfirm"] \
+        cmd \
         , stdout=subprocess.PIPE)
     return updates
 
