@@ -2,7 +2,7 @@ import requests
 import requests_unixsocket
 
 
-def get_status(client, logger):
+def get_status(logger):
     r = requests.post('http+unix://%2Ftmp%2F.auc_socket/',  json={'function': 'status'})
     if r.status_code == 200:
         logger.info(r.json()['status'])
@@ -12,7 +12,7 @@ def get_status(client, logger):
         logger.error('Unknown error')
 
 
-def clear_reboot(client, logger):
+def clear_reboot(logger):
     r = requests.post('http+unix://%2Ftmp%2F.auc_socket/', json={'function': 'clear-reboot'})
     if r.status_code == 200:
         logger.info(r.json()['msg'])
@@ -22,7 +22,7 @@ def clear_reboot(client, logger):
         logger.error('Unknown error')
 
 
-def get_updates(client, logger):
+def get_updates(logger):
     r = requests.post('http+unix://%2Ftmp%2F.auc_socket/', json={'function': 'clear-reboot'})
     if r.status_code == 200:
         for k, v in r.json()['updates'].items():
