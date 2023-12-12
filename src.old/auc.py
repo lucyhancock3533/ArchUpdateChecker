@@ -4,7 +4,7 @@
 from sys import argv
 from auccli import run_auc_cli
 
-if(__name__ == "__main__"):
+if __name__ == "__main__":
     try:
         if(len(argv) > 1):
             run_auc_cli()
