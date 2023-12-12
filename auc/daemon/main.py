@@ -41,6 +41,7 @@ def run_daemon(args, logger):
             logger.debug('Running main loop')
             if state.access_state('inprogress'):
                 internet = False
+                state.set_state('msg', 'Waiting for internet connection')
                 logger.info('Checking for internet connection')
                 while not internet:
                     try:
@@ -52,6 +53,7 @@ def run_daemon(args, logger):
 
                 did_something = False
                 logger.info('Executing updates')
+                state.set_state('msg', 'Updates in progress')
 
                 # Update mirrorlist
                 if config.update_mr and state.access_state('mirrorlist'):
