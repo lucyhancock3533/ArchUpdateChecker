@@ -37,7 +37,8 @@ class PacmanUpdater:
     def do_updates(self):
         self.logger.info('Installing updates with Pacman')
         try:
-            paccmd = subprocess.run(['pacman', '-Su'], check=True, capture_output=True, text=True)
+            paccmd = subprocess.run(['pacman', '-Su', '--noconfirm', '--noprogressbar'],
+                                    check=True, capture_output=True, text=True)
             with open(f'{self.log_path}/auc_pacman_{datetime.today().strftime("%Y-%m-%d")}.log', 'a') as f:
                 f.write(paccmd.stdout)
                 f.write(paccmd.stderr)
