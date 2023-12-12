@@ -45,6 +45,15 @@ def get_status(state):
     return state.access_state('msg')
 
 
+def clear_reboot(state):
+    if state.access_state('rebootrequired'):
+        state.set_state('rebootrequired', False)
+        state.set_state('msg', 'Nothing to do')
+        return 'Reboot cleared'
+    else:
+        return 'No reboot required'
+
+
 def get_prompt(state):
     if not state.access_state('prompt') and not state.access_state('inprogess'):
         return 'err:notrequired'
@@ -57,4 +66,4 @@ def get_updates(state):
     return state.access_state('updates')
 
 
-func = {'status': get_status, 'prompt': get_prompt, 'updates': get_updates}
+func = {'status': get_status, 'prompt': get_prompt, 'updates': get_updates, 'clear-reboot': None}
