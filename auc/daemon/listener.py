@@ -13,7 +13,7 @@ class DaemonListener:
         self._init_secret()
         Path('/tmp/.auc_socket').unlink(missing_ok=True)
         self.listener = Listener('/tmp/.auc_socket', family='AF_UNIX', authkey=self.secret.encode())
-        os.chmod('/tmp/.auc_socker', 0o777)
+        os.chmod('/tmp/.auc_socket', 0o777)
 
     def _init_secret(self):
         self.secret = secrets.token_hex(nbytes=512)
