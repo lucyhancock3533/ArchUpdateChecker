@@ -106,7 +106,7 @@ class UpdateStatusWindow(Gtk.Window):
 
     def do_updates(self):
         try:
-            updates = run_updates() # Run updates
+            updates = run_updates("/usr/bin/gksudo") # Run updates
             for line in updates.stdout: # Update text view
                 GLib.idle_add(self.update_progress, line.decode())
             GLib.idle_add(self.finish_updates, self.super)
@@ -144,7 +144,7 @@ class MirrorlistSettingsWindow(Gtk.Window):
             Gtk.main_quit()
 
 def run_auc():
-    sync_db() # Update pacman database
+    sync_db("/usr/bin/gksudo") # Update pacman database
     if (get_update_count() > 0):
         notify = UpdateNotificationWindow("<big>" + str(get_update_count()) +\
         " updates are available</big>", "<big>" + str(get_ignore_count()) +\
