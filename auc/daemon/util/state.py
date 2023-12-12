@@ -5,7 +5,7 @@ class AucState:
     def __init__(self):
         self.lock = Lock()
         self.state = {
-            'msg': 'Updates in progress',
+            'msg': 'Waiting',
             'prompt': False,
             'mirrorlist': True,
             'update': True,

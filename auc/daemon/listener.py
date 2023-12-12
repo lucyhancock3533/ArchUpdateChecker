@@ -31,7 +31,7 @@ class AUCRequestHandler(BaseHTTPRequestHandler):
             return
 
         self.server.logger.info('[LISTENER] Executing %s' % req['function'])
-        resp = func[req['function']](self.server.state)
+        resp = func[req['function']](self.server.state, req)
         if resp is None:
             err = {'error': 'Function not allowed'}
             self.wfile.write(json.dumps(err).encode('UTF-8'))
@@ -69,11 +69,11 @@ class DaemonListener:
         self.listener.serve_forever()
 
 
-def get_status(state):
+def get_status(state, req):
     return {'status': state.access_state('msg')}
 
 
-def clear_reboot(state):
+def clear_reboot(state, req):
     if state.access_state('rebootrequired'):
         state.set_state('rebootrequired', False)
         state.set_state('msg', 'Nothing to do')
@@ -82,7 +82,7 @@ def clear_reboot(state):
         return {'msg': 'No reboot required'}
 
 
-def get_prompt(state):
+def get_prompt(state, req):
     if not state.access_state('prompt') and not state.access_state('inprogress'):
         return {'error': 'notrequired'}
     if state.access_state('prompt'):
@@ -90,8 +90,35 @@ def get_prompt(state):
     return {'error': 'noprompt'}
 
 
-def get_updates(state):
+def set_update(state, req):
+    if state.access_state('inprogress'):
+        return {'error': 'Updates in progress'}
+    state.set_state('update', True)
+
+
+def set_inprogress(state, req):
+    if state.access_state('inprogress'):
+        return {'error': 'Updates in progress'}
+    state.set_state('inprogress', True)
+
+
+def set_mirrorlist(state, req):
+    if state.access_state('inprogress'):
+        return {'error': 'Updates in progress'}
+    state.set_state('mirrorlist', True)
+
+
+def get_updates(state, req):
     return {'updates': state.access_state('updates')}
 
 
-func = {'status': get_status, 'prompt': get_prompt, 'updates': get_updates, 'clear-reboot': clear_reboot}
+func = \
+    {
+        'status': get_status,
+        'prompt': get_prompt,
+        'updates': get_updates,
+        'clear-reboot': clear_reboot,
+        'update': set_update,
+        'run': set_inprogress,
+        'mirrorlist': set_mirrorlist
+    }
