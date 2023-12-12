@@ -25,10 +25,9 @@ def set_run(secret):
     return requests.post('http+unix://%2Ftmp%2F.auc_socket/', json={'function': 'run', 'secret': secret})
 
 
-def connect_listener(secret, socket_path, socket_secret):
+def connect_listener(secret, socket_path):
     return requests.post('http+unix://%2Ftmp%2F.auc_socket/', json={
                                                                     'function': 'connect',
                                                                     'secret': secret,
-                                                                    'socket_path': socket_path,
-                                                                    'socket_secret': socket_secret
+                                                                    'socket_path': socket_path
     })

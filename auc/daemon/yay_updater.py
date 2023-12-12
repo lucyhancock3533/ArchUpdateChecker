@@ -15,6 +15,7 @@ class YayUpdater:
         for i in iter(lambda: paccmd.stdout.read(1), ""):
             log_out.write(i)
         paccmd.wait()
+        log_out.finish()
         if paccmd.returncode != 0:
             raise subprocess.CalledProcessError(paccmd.returncode, paccmd.args)
 
@@ -36,5 +37,6 @@ class YayUpdater:
         for i in iter(lambda: paccmd.stdout.read(1), ""):
             log_out.write(i)
         paccmd.wait()
+        log_out.finish()
         if paccmd.returncode != 0:
             raise subprocess.CalledProcessError(paccmd.returncode, paccmd.args)

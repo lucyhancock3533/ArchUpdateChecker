@@ -6,6 +6,7 @@ from pathlib import Path
 from http.server import BaseHTTPRequestHandler
 
 from auc.daemon.util.unix_http import UnixHTTPServer
+from auc.daemon.util.socket_handler import JsonSocketHandler
 
 
 class AUCRequestHandler(BaseHTTPRequestHandler):
@@ -31,7 +32,7 @@ class AUCRequestHandler(BaseHTTPRequestHandler):
             return
 
         self.server.logger.info('[LISTENER] Executing %s' % req['function'])
-        resp = func[req['function']](self.server.state, req, self.server.secret)
+        resp = func[req['function']](self.server.state, req, self.server.secret, self.server.logger)
         if resp is None:
             err = {'error': 'Function not allowed'}
             self.wfile.write(json.dumps(err).encode('UTF-8'))
@@ -64,18 +65,17 @@ class DaemonListener:
         with open('/tmp/.auc_secret', 'w') as f:
             f.write(self.secret)
         os.chmod('/tmp/.auc_secret', 0o600)
-        os.chown('/tmp/.auc_secret', 0, 0)
 
     def listen_loop(self):
         self.logger.info('[LISTENER] Starting daemon listener')
         self.listener.serve_forever()
 
 
-def get_status(state, req, secret):
+def get_status(state, req, secret, logger):
     return {'status': state.access_state('msg')}
 
 
-def clear_reboot(state, req, secret):
+def clear_reboot(state, req, secret, logger):
     if req.get('secret', '') == secret:
         if state.access_state('rebootrequired'):
             state.set_state('rebootrequired', False)
@@ -87,7 +87,7 @@ def clear_reboot(state, req, secret):
         return None
 
 
-def get_prompt(state, req, secret):
+def get_prompt(state, req, secret, logger):
     if not state.access_state('prompt') and not state.access_state('inprogress'):
         return {'error': 'notrequired'}
     if state.access_state('prompt'):
@@ -95,7 +95,7 @@ def get_prompt(state, req, secret):
     return {'error': 'noprompt'}
 
 
-def set_update(state, req, secret):
+def set_update(state, req, secret, logger):
     if req.get('secret', '') == secret:
         if state.access_state('inprogress'):
             return {'error': 'Updates in progress'}
@@ -105,7 +105,7 @@ def set_update(state, req, secret):
         return None
 
 
-def set_inprogress(state, req, secret):
+def set_inprogress(state, req, secret, logger):
     if req.get('secret', '') == secret:
         if state.access_state('inprogress'):
             return {'error': 'Updates in progress'}
@@ -115,7 +115,7 @@ def set_inprogress(state, req, secret):
         return None
 
 
-def set_mirrorlist(state, req, secret):
+def set_mirrorlist(state, req, secret, logger):
     if req.get('secret', '') == secret:
         if state.access_state('inprogress'):
             return {'error': 'Updates in progress'}
@@ -125,17 +125,26 @@ def set_mirrorlist(state, req, secret):
         return None
 
 
-def get_updates(state, req, secret):
+def get_updates(state, req, secret, logger):
     return {'updates': state.access_state('updates')}
 
 
-func = \
-    {
-        'status': get_status,
-        'prompt': get_prompt,
-        'updates': get_updates,
-        'clear-reboot': clear_reboot,
-        'update': set_update,
-        'run': set_inprogress,
-        'mirrorlist': set_mirrorlist
-    }
+def connect_logger(state, req, secret, logger):
+    if req.get('secret', '') == secret:
+        handler = JsonSocketHandler(req.get('socket_path', None), None)
+        logger.addHandler(handler)
+        return {'success': True}
+    else:
+        return None
+
+
+func = {
+    'status': get_status,
+    'prompt': get_prompt,
+    'updates': get_updates,
+    'clear-reboot': clear_reboot,
+    'update': set_update,
+    'run': set_inprogress,
+    'mirrorlist': set_mirrorlist,
+    'connect': connect_logger
+}
