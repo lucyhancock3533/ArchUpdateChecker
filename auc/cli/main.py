@@ -9,6 +9,6 @@ def run_cli(args, logger):
     with open('/tmp/.auc_secret', 'r') as f:
         secret = f.read()
     client = Client('/tmp/.auc_socket', family='AF_UNIX', authkey=secret.encode())
-    client.send('status')
+    client.send('updates')
     print(client.recv())
     client.close()

@@ -11,7 +11,8 @@ class MirrorlistUpdate:
         mrl = requests.get(self.mr_url)
         if mrl.status_code != requests.codes.ok:
             self.logger.error('Failed to fetch new mirror list')
-            return
+            return False
         with open('/etc/pacman.d/mirrorlist', 'w') as f:
             f.write(mrl.text.replace('#S', 'S'))
         self.logger.info('Pacman mirror list updated')
+        return True
