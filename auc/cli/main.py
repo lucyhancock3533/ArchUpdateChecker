@@ -70,3 +70,6 @@ def run():
 
 
 cmds = {'status': status_cmd, 'updates': updates_cmd, 'clear-reboot':  clear_reboot}
+
+if __name__ == '__main__':
+    run()
