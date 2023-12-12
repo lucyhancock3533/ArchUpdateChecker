@@ -31,7 +31,7 @@ class AUCRequestHandler(BaseHTTPRequestHandler):
             return
 
         self.server.logger.info('[LISTENER] Executing %s' % req['function'])
-        resp = func[req['function']](self.server.state, req)
+        resp = func[req['function']](self.server.state, req, self.server.secret)
         if resp is None:
             err = {'error': 'Function not allowed'}
             self.wfile.write(json.dumps(err).encode('UTF-8'))
@@ -54,7 +54,8 @@ class DaemonListener:
         self.state = state
         self._init_secret()
         Path('/tmp/.auc_socket').unlink(missing_ok=True)
-        self.listener = UnixHTTPServer('/tmp/.auc_socket', AUCRequestHandler, self.state, self.logger, self.secret)
+        self.listener = UnixHTTPServer('/tmp/.auc_socket', AUCRequestHandler,
+                                       self.state, self.logger, self.secret)
         os.chmod('/tmp/.auc_socket', 0o777)
 
     def _init_secret(self):
@@ -63,26 +64,30 @@ class DaemonListener:
         with open('/tmp/.auc_secret', 'w') as f:
             f.write(self.secret)
         os.chmod('/tmp/.auc_secret', 0o600)
+        os.chown('/tmp/.auc_secret', 0, 0)
 
     def listen_loop(self):
         self.logger.info('[LISTENER] Starting daemon listener')
         self.listener.serve_forever()
 
 
-def get_status(state, req):
+def get_status(state, req, secret):
     return {'status': state.access_state('msg')}
 
 
-def clear_reboot(state, req):
-    if state.access_state('rebootrequired'):
-        state.set_state('rebootrequired', False)
-        state.set_state('msg', 'Nothing to do')
-        return {'msg': 'Reboot cleared'}
+def clear_reboot(state, req, secret):
+    if req.get('secret', '') == secret:
+        if state.access_state('rebootrequired'):
+            state.set_state('rebootrequired', False)
+            state.set_state('msg', 'Nothing to do')
+            return {'msg': 'Reboot cleared'}
+        else:
+            return {'msg': 'No reboot required'}
     else:
-        return {'msg': 'No reboot required'}
+        return None
 
 
-def get_prompt(state, req):
+def get_prompt(state, req, secret):
     if not state.access_state('prompt') and not state.access_state('inprogress'):
         return {'error': 'notrequired'}
     if state.access_state('prompt'):
@@ -90,25 +95,37 @@ def get_prompt(state, req):
     return {'error': 'noprompt'}
 
 
-def set_update(state, req):
-    if state.access_state('inprogress'):
-        return {'error': 'Updates in progress'}
-    state.set_state('update', True)
+def set_update(state, req, secret):
+    if req.get('secret', '') == secret:
+        if state.access_state('inprogress'):
+            return {'error': 'Updates in progress'}
+        state.set_state('update', True)
+        return {'success': True}
+    else:
+        return None
 
 
-def set_inprogress(state, req):
-    if state.access_state('inprogress'):
-        return {'error': 'Updates in progress'}
-    state.set_state('inprogress', True)
+def set_inprogress(state, req, secret):
+    if req.get('secret', '') == secret:
+        if state.access_state('inprogress'):
+            return {'error': 'Updates in progress'}
+        state.set_state('inprogress', True)
+        return {'success': True}
+    else:
+        return None
 
 
-def set_mirrorlist(state, req):
-    if state.access_state('inprogress'):
-        return {'error': 'Updates in progress'}
-    state.set_state('mirrorlist', True)
+def set_mirrorlist(state, req, secret):
+    if req.get('secret', '') == secret:
+        if state.access_state('inprogress'):
+            return {'error': 'Updates in progress'}
+        state.set_state('mirrorlist', True)
+        return {'success': True}
+    else:
+        return None
 
 
-def get_updates(state, req):
+def get_updates(state, req, secret):
     return {'updates': state.access_state('updates')}
 
 
