@@ -3,7 +3,8 @@ import sys
 
 from argparse import ArgumentParser
 
-from auc.daemon.daemon import add_subparser as daemon_subparse, run_daemon
+from auc.daemon.main import add_subparser as daemon_subparse, run_daemon
+from auc.cli.main import add_subparser as cli_subparse, run_cli
 
 
 def version(args, logger):
@@ -11,7 +12,7 @@ def version(args, logger):
 
 
 log_levels = {'error': logging.ERROR, 'warning': logging.WARNING, 'info': logging.INFO, 'debug': logging.DEBUG}
-modes = {'version': version, 'daemon': run_daemon}
+modes = {'version': version, 'daemon': run_daemon, 'cli': run_cli}
 
 
 def run():
@@ -21,6 +22,8 @@ def run():
     cmd_sub.add_parser(name='version')
     daemon_sub = cmd_sub.add_parser(name='daemon')
     daemon_subparse(daemon_sub)
+    cli_sub = cmd_sub.add_parser(name='cli')
+    cli_subparse(cli_sub)
     args = parser.parse_args()
 
     log_format = '[AUC] [%(levelname)s] %(message)s'
