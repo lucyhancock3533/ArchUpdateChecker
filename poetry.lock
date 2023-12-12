@@ -188,6 +188,20 @@ socks = ["PySocks (>=1.5.6,!=1.5.7)"]
 use-chardet-on-py3 = ["chardet (>=3.0.2,<6)"]
 
 [[package]]
+name = "requests-unixsocket"
+version = "0.3.0"
+description = "Use requests to talk HTTP via a UNIX domain socket"
+optional = false
+python-versions = "*"
+files = [
+    {file = "requests-unixsocket-0.3.0.tar.gz", hash = "sha256:28304283ea9357d45fff58ad5b11e47708cfbf5806817aa59b2a363228ee971e"},
+    {file = "requests_unixsocket-0.3.0-py2.py3-none-any.whl", hash = "sha256:c685c680f0809e1b2955339b1e5afc3c0022b3066f4f7eb343f43a6065fc0e5d"},
+]
+
+[package.dependencies]
+requests = ">=1.1"
+
+[[package]]
 name = "urllib3"
 version = "2.0.2"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
@@ -207,4 +221,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "33ffdcaee3084c9f495481127a0cf11be8fcefe9b6d0f32080fa7548ecf53e48"
+content-hash = "37d3e8f4dd6a7a625d14421b1432ebbf5bf8cf15efd068d8be8fcbaa2e73a9ab"
