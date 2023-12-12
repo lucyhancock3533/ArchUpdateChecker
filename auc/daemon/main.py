@@ -1,10 +1,12 @@
 import subprocess
+import sys
 import time
 import logging
+import requests
+from argparse import ArgumentParser
 
 from threading import Thread
 from pathlib import Path
-from pythonping import ping
 from datetime import datetime
 
 from auc.daemon.listener import DaemonListener
@@ -12,25 +14,31 @@ from auc.daemon.config import AucConfig
 from auc.daemon.state import AucState
 from auc.daemon.mirrorlist import MirrorlistUpdate
 from auc.daemon.pacman_updater import PacmanUpdater
+from auc.daemon.yay_updater import YayUpdater
+
+log_levels = {'error': logging.ERROR, 'warning': logging.WARNING, 'info': logging.INFO, 'debug': logging.DEBUG}
 
 
-def add_subparser(subparser):
-    subparser.add_argument('--config', type=str, default='/etc/auc.yaml', nargs='?')
+def add_parser():
+    parser = ArgumentParser()
+    parser.add_argument('--log-level', type=str, default='info', nargs='?', choices=log_levels.keys())
+    parser.add_argument('--config', type=str, default='/etc/auc.yaml', nargs='?')
+    return parser.parse_args()
 
 
-def check_network(ping_addr, logger):
-    logger.debug('Pinging %s', ping_addr)
-    res = ping(target=ping_addr, count=1)
-    while not res.success():
-        time.sleep(60)
-        logger.debug('Pinging %s', ping_addr)
-        res = ping(target=ping_addr, count=1)
+def check_network(ping_addr):
+    try:
+        requests.get(ping_addr)
+        return True
+    except requests.exceptions.RequestException:
+        return False
 
 
 def run_daemon(args, logger):
     config = AucConfig(args.config, logger)
     if config.file_log:
         logger.addHandler(logging.FileHandler(f'{config.log_path}/auc_{datetime.today().strftime("%Y-%m-%d")}.log'))
+    yay = config.use_yay
     logger.info('Starting AUC daemon')
     state = AucState()
     Path(config.log_path).mkdir(parents=True, exist_ok=True)
@@ -49,11 +57,8 @@ def run_daemon(args, logger):
                 state.set_state('msg', 'Waiting for network connection')
                 logger.info('Checking for network connection')
                 while not network:
-                    try:
-                        check_network(config.ping_addr, logger)
-                        network = True
-                    except OSError:
-                        logger.debug('No network connection')
+                    network = check_network(config.ping_addr)
+                    if not network:
                         time.sleep(60)
 
                 did_something = False
@@ -76,7 +81,11 @@ def run_daemon(args, logger):
 
                 # Do updates
                 if state.access_state('update'):
-                    p = PacmanUpdater(logger, config.log_path)
+                    state.set_state('msg', 'Checking for updates')
+                    if yay:
+                        p = YayUpdater(logger, config.log_path)
+                    else:
+                        p = PacmanUpdater(logger, config.log_path)
                     logger.info('Updating pacman database')
                     try:
                         p.sync_db()
@@ -95,6 +104,7 @@ def run_daemon(args, logger):
                         updates = {}
 
                     if len(updates.keys()) > 0:
+                        state.set_state('msg', 'Installing updates')
                         logger.info('Performing updates')
                         logger.info('Updates available:')
                         [logger.info('%s %s ->  %s' % (x, y['old'], y['new'])) for x, y in updates.items()]
@@ -123,3 +133,15 @@ def run_daemon(args, logger):
     except KeyboardInterrupt:
         logger.info('Exiting')
         Path('/tmp/.auc_secret').unlink(missing_ok=True)
+
+
+def run():
+    args = add_parser()
+
+    log_format = '[AUC] [%(levelname)s] %(message)s'
+    logging.basicConfig(level=log_levels[args.log_level],
+                        handlers=[logging.StreamHandler(sys.stdout)],
+                        format=log_format)
+    logger = logging.getLogger(name="auc")
+
+    run_daemon(args, logger)

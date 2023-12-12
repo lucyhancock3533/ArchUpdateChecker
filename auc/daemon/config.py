@@ -14,8 +14,9 @@ class AucConfig:
                                        '&ip_version=4&ip_version=6&use_mirror_status=on')
         self._update_mr = config.get('update_mr', False)
         self._log_path = config.get('log_path', '/var/log/auc')
-        self._ping_addr = config.get('ping_addr', '1.1.1.1')
+        self._ping_addr = config.get('ping_addr', 'https://1.1.1.1')
         self._file_log = config.get('file_log', True)
+        self._use_yay = config.get('use_yay', False)
 
     @property
     def mr_url(self):
@@ -36,3 +37,7 @@ class AucConfig:
     @property
     def file_log(self):
         return self._file_log
+
+    @property
+    def use_yay(self):
+        return self._use_yay
