@@ -8,6 +8,8 @@ A daemonized Arch Linux automatic updater.
 * For GTK prompter:
   * GTK 4
   * libadwaita
+  * cairo
+  * gobject-introspection
 
 ### Usage
 * Start daemon `aucd`
