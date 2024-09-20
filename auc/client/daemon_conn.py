@@ -20,6 +20,9 @@ def set_no_reboot(secret):
 def set_update(secret):
     return requests.post('http+unix://%2Ftmp%2F.auc_socket/', json={'function': 'update', 'secret': secret})
 
+def set_mirrorlist(secret):
+    return requests.post('http+unix://%2Ftmp%2F.auc_socket/', json={'function': 'mirrorlist', 'secret': secret})
+
 
 def set_run(secret):
     return requests.post('http+unix://%2Ftmp%2F.auc_socket/', json={'function': 'run', 'secret': secret})

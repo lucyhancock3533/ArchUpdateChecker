@@ -70,6 +70,7 @@ def do_updates(logger):
     else:
         logger.error('Unknown error')
         return
+    conn = listener.get_connection()
     r = set_update(secret)
     if r.status_code == 200:
         if r.json()['success']:
@@ -91,7 +92,45 @@ def do_updates(logger):
         logger.error('Unknown error')
         return
 
-    log_watcher(logger, listener)
+    log_watcher(logger, listener, conn)
+
+
+def do_mirrorlist(logger):
+    secret = load_secret(logger)
+    listener = LogListener()
+    r = connect_listener(secret, listener.socket_path)
+    if r.status_code == 200:
+        if r.json()['success']:
+            logging.debug('Connected aucd logger')
+    elif 'error' in r.json():
+        logger.error(r.json()['error'])
+        return
+    else:
+        logger.error('Unknown error')
+        return
+    conn = listener.get_connection()
+    r = set_update(secret)
+    if r.status_code == 200:
+        if r.json()['success']:
+            logging.debug('Set mirrorlist flag')
+    elif 'error' in r.json():
+        logger.error(r.json()['error'])
+        return
+    else:
+        logger.error('Unknown error')
+        return
+    r = set_run(secret)
+    if r.status_code == 200:
+        if r.json()['success']:
+            logging.debug('Set run flag')
+    elif 'error' in r.json():
+        logger.error(r.json()['error'])
+        return
+    else:
+        logger.error('Unknown error')
+        return
+
+    log_watcher(logger, listener, conn)
 
 
 def connect_logger(logger):
@@ -107,18 +146,20 @@ def connect_logger(logger):
     else:
         logger.error('Unknown error')
         return
-
-    log_watcher(logger, listener)
-
-
-def log_watcher(logger, listener):
-    logger.info('Connected to aucd')
     conn = listener.get_connection()
+
+    log_watcher(logger, listener,conn)
+
+
+def log_watcher(logger, listener, conn):
+    logger.info('Connected to aucd')
     try:
         while True:
             d = json.loads(conn.recv_bytes().decode())
             if d['msg'] is not None:
                 if '{ENDWATCH}' in d['msg']:
+                    conn.close()
+                    listener.close_socket()
                     break
                 if '[LISTENER]' not in d['msg']:
                     logger.info(d['msg'])
@@ -157,6 +198,7 @@ cmds = {
     'updates': updates_cmd,
     'clear-reboot':  clear_reboot,
     'update': do_updates,
+    'ml': do_mirrorlist,
     'watch': connect_logger
 }
 
