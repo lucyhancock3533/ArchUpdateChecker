@@ -8,10 +8,10 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.11"
 requests = "^2.32.3"
-pyyaml = "^6.0"
-requests-unixsocket2 = "^0.4.0"
-urllib3 = "1.26.19"
-pygobject = "^3.44.1"
+pyyaml = "^6.0.2"
+requests-unixsocket2 = "^0.4.2"
+urllib3 = "^2.2.3"
+pygobject = "^3.50.0"
 
 [tool.poetry.scripts]
 auc = "auc.cli.main:run"
