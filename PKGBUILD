@@ -1,6 +1,6 @@
 _name="auc"
 pkgname="auc"
-pkgver=1.4.0
+pkgver=1.5.1
 pkgrel=0
 pkgdesc="A tool for checking for pacman based distro updates. It's probably really bad."
 arch=('x86_64')
