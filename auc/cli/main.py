@@ -5,7 +5,7 @@ from argparse import ArgumentParser
 
 import requests_unixsocket
 
-from auc.client.daemon_conn import get_status, get_updates, set_no_reboot, set_update, set_run, connect_listener
+from auc.client.daemon_conn import get_status, get_updates, set_no_reboot, set_update, set_run, connect_listener, set_mirrorlist
 from auc.client.log_conn import LogListener
 
 log_levels = {'error': logging.ERROR, 'warning': logging.WARNING, 'info': logging.INFO, 'debug': logging.DEBUG}
@@ -109,7 +109,7 @@ def do_mirrorlist(logger):
         logger.error('Unknown error')
         return
     conn = listener.get_connection()
-    r = set_update(secret)
+    r = set_mirrorlist(secret)
     if r.status_code == 200:
         if r.json()['success']:
             logging.debug('Set mirrorlist flag')

@@ -133,6 +133,7 @@ def connect_logger(state, req, secret, logger):
     if req.get('secret', '') == secret:
         handler = JsonSocketHandler(req.get('socket_path', None), None)
         logger.addHandler(handler)
+        logger.critical("Connected auc watcher")
         return {'success': True}
     else:
         return None
