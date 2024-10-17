@@ -2,7 +2,7 @@ import time
 
 import requests.exceptions
 
-from auc.client.daemon_conn import get_status, get_prompt
+from aucd.auc.client.daemon_conn import get_status, get_prompt
 
 
 class PromptThread:

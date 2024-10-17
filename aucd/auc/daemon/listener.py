@@ -5,8 +5,8 @@ import json
 from pathlib import Path
 from http.server import BaseHTTPRequestHandler
 
-from auc.daemon.util.unix_http import UnixHTTPServer
-from auc.daemon.util.socket_handler import JsonSocketHandler
+from aucd.auc.daemon.util.unix_http import UnixHTTPServer
+from aucd.auc.daemon.util.socket_handler import JsonSocketHandler
 
 
 class AUCRequestHandler(BaseHTTPRequestHandler):

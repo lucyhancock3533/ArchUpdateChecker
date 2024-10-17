@@ -6,8 +6,8 @@ import requests
 gi.require_version('Gtk', '4.0')
 from gi.repository import Gtk
 
-from auc.client.daemon_conn import get_updates
-from auc.prompt.prompt_thread import PromptThread
+from aucd.auc.client.daemon_conn import get_updates
+from aucp.auc.prompt.prompt_thread import PromptThread
 
 
 class PromptWindow(Gtk.ApplicationWindow):

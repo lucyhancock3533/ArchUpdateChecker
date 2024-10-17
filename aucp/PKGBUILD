@@ -1,8 +1,8 @@
-_name="auc"
-pkgname="auc"
-pkgver=1.5.2
+_name="aucp"
+pkgname="aucp"
+pkgver=2.0.0
 pkgrel=0
-pkgdesc="A tool for checking for pacman based distro updates. It's probably really bad."
+pkgdesc="GUI prompter for aucd"
 arch=('x86_64')
 url="https://github.com/lucyhancock3533/ArchUpdateChecker"
 depends=('python-requests' 'python-yaml' 'python-requests-unixsocket' 'python-urllib3' 'python-gobject' 'gtk4' 'libadwaita')

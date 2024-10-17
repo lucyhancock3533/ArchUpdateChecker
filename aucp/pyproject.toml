@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "aucp"
+version = "2.0.0"
+description = "GUI prompter for aucd"
+authors = ["Lucy Hancock <lucy@leh.dev>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+requests = "^2.32.3"
+pyyaml = "^6.0.2"
+requests-unixsocket2 = "^0.4.2"
+urllib3 = "^2.2.3"
+pygobject = "^3.50.0"
+
+[tool.poetry.scripts]
+aucp = "auc.prompt.main:run"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

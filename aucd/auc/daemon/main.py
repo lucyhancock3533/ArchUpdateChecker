@@ -9,12 +9,12 @@ from threading import Thread
 from pathlib import Path
 from datetime import datetime
 
-from auc.daemon.listener import DaemonListener
-from auc.daemon.util.config import AucConfig
-from auc.daemon.util.state import AucState
-from auc.daemon.mirrorlist import MirrorlistUpdate
-from auc.daemon.pacman_updater import PacmanUpdater
-from auc.daemon.yay_updater import YayUpdater
+from aucd.auc.daemon.listener import DaemonListener
+from aucd.auc.daemon.util.config import AucConfig
+from aucd.auc.daemon.util.state import AucState
+from aucd.auc.daemon.mirrorlist import MirrorlistUpdate
+from aucd.auc.daemon.pacman_updater import PacmanUpdater
+from aucd.auc.daemon.yay_updater import YayUpdater
 
 log_levels = {'error': logging.ERROR, 'warning': logging.WARNING, 'info': logging.INFO, 'debug': logging.DEBUG}
 

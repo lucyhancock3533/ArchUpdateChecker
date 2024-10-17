@@ -5,8 +5,8 @@ from argparse import ArgumentParser
 
 import requests_unixsocket
 
-from auc.client.daemon_conn import get_status, get_updates, set_no_reboot, set_update, set_run, connect_listener, set_mirrorlist
-from auc.client.log_conn import LogListener
+from aucd.auc.client.daemon_conn import get_status, get_updates, set_no_reboot, set_update, set_run, connect_listener, set_mirrorlist
+from aucd.auc.client.log_conn import LogListener
 
 log_levels = {'error': logging.ERROR, 'warning': logging.WARNING, 'info': logging.INFO, 'debug': logging.DEBUG}
 
