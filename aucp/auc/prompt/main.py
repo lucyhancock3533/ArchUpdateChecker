@@ -6,7 +6,7 @@ gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 from gi.repository import Adw
 
-from auc.prompt.prompt_window import PromptWindow
+from aucp.auc.prompt.prompt_window import PromptWindow
 
 
 class AucGtkApp(Adw.Application):

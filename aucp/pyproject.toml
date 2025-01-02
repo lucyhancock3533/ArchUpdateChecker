@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "auc"
+name = "aucp"
 version = "1.6.0"
-description = "A tool for checking for pacman based distro updates. It's probably really bad."
+description = "GUI prompter for auc. It's probably really bad."
 authors = ["Lucy Hancock <lucy@leh.dev>"]
 readme = "README.md"
 
@@ -11,10 +11,10 @@ requests = "^2.32.3"
 pyyaml = "^6.0.2"
 requests-unixsocket2 = "^0.4.2"
 urllib3 = "^2.3.0"
+pygobject = "^3.50.0"
 
 [tool.poetry.scripts]
-auc = "auc.cli.main:run"
-aucd = "auc.daemon.main:run"
+aucp = "auc.prompt.main:run"
 
 [build-system]
 requires = ["poetry-core"]
