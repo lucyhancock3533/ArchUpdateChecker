@@ -61,7 +61,7 @@ def run_daemon(args, logger):
                 while not network:
                     network = check_network(config.ping_addr)
                     if not network:
-                        time.sleep(15)
+                        time.sleep(5)
 
                 did_something = False
                 logger.info('Executing updates')
@@ -123,6 +123,7 @@ def run_daemon(args, logger):
                             continue
                         did_something = True
                     state.set_state('update', False)
+                    state.set_state('updateneeded', False)
 
                 if did_something:
                     state.set_state('msg', 'A reboot is required to complete updates')
@@ -130,6 +131,9 @@ def run_daemon(args, logger):
                     state.set_state('prompt', True)
                 else:
                     state.set_state('msg', 'No updates available')
+
+                if state.access_state('updateneeded'):
+                    state.set_state('msg', 'Run auc update to check for updates')
 
                 # Set status inactive
                 state.set_state('inprogress', False)
