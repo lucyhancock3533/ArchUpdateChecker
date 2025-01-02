@@ -4,7 +4,11 @@ A daemonized Arch Linux automatic updater.
 
 ### Requirements
 * pacman
-* Python 3.11+
+* Python 3.13+
+* requests
+* pyyaml
+* urllib3
+* requests-unixsocket2
 * For GTK prompter:
   * GTK 4
   * libadwaita
@@ -33,4 +37,6 @@ log_path: '<path to store file logs>' (Default /var/log/auc)
 file_log: True (Default True)
 use_yay: False (Defaut False)
 ping_addr: '<URL to check network connectivity>' (Default https://1.1.1.1)
+tmp_path: '<Path to auc tmp dir>' (Default /tmp) (Currently unimplemented)
+update_on_start: True (Default True)
 ```

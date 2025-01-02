@@ -37,10 +37,11 @@ def check_network(ping_addr):
 def run_daemon(args, logger):
     config = AucConfig(args.config, logger)
     if config.file_log:
+        Path(config.log_path).mkdir(exist_ok=True, parents=True)
         logger.addHandler(logging.FileHandler(f'{config.log_path}/auc_{datetime.today().strftime("%Y-%m-%d")}.log'))
     yay = config.use_yay
     logger.info('Starting AUC daemon')
-    state = AucState()
+    state = AucState(config)
     Path(config.log_path).mkdir(parents=True, exist_ok=True)
 
     # Start listener thread
@@ -60,7 +61,7 @@ def run_daemon(args, logger):
                 while not network:
                     network = check_network(config.ping_addr)
                     if not network:
-                        time.sleep(15)
+                        time.sleep(5)
 
                 did_something = False
                 logger.info('Executing updates')
@@ -122,6 +123,7 @@ def run_daemon(args, logger):
                             continue
                         did_something = True
                     state.set_state('update', False)
+                    state.set_state('updateneeded', False)
 
                 if did_something:
                     state.set_state('msg', 'A reboot is required to complete updates')
@@ -129,6 +131,9 @@ def run_daemon(args, logger):
                     state.set_state('prompt', True)
                 else:
                     state.set_state('msg', 'No updates available')
+
+                if state.access_state('updateneeded'):
+                    state.set_state('msg', 'Run auc update to check for updates')
 
                 # Set status inactive
                 state.set_state('inprogress', False)

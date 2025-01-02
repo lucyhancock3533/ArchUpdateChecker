@@ -2,7 +2,7 @@ from threading import Lock
 
 
 class AucState:
-    def __init__(self):
+    def __init__(self, config=None):
         self.lock = Lock()
         self.state = {
             'msg': 'Waiting',
@@ -11,8 +11,12 @@ class AucState:
             'update': True,
             'inprogress': True,
             'rebootrequired': False,
+            'updateneeded': True,
             'updates': {}
         }
+
+        if config is not None:
+            self.state['update'] = config.update_on_start
 
     def access_state(self, key):
         self.lock.acquire()

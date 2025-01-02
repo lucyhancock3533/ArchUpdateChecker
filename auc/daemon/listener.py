@@ -61,7 +61,6 @@ class DaemonListener:
 
     def _init_secret(self):
         self.secret = secrets.token_hex(nbytes=512)
-        Path('/tmp/.auc_secret').unlink(missing_ok=True)
         with open('/tmp/.auc_secret', 'w') as f:
             f.write(self.secret)
         os.chmod('/tmp/.auc_secret', 0o600)
