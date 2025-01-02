@@ -17,7 +17,7 @@ class AucConfig:
         self._ping_addr = config.get('ping_addr', 'https://1.1.1.1')
         self._file_log = config.get('file_log', True)
         self._use_yay = config.get('use_yay', False)
-        self._tmp_path = config.get('tmp_path', '/tmp')
+        #self._tmp_path = config.get('tmp_path', '/tmp')
         self._update_on_start = config.get('update_on_start', True)
 
     @property
@@ -44,9 +44,9 @@ class AucConfig:
     def use_yay(self):
         return self._use_yay
 
-    @property
-    def tmp_path(self):
-        return self._tmp_path
+    #@property
+    #def tmp_path(self):
+    #    return self._tmp_path
 
     @property
     def update_on_start(self):

@@ -37,5 +37,6 @@ log_path: '<path to store file logs>' (Default /var/log/auc)
 file_log: True (Default True)
 use_yay: False (Defaut False)
 ping_addr: '<URL to check network connectivity>' (Default https://1.1.1.1)
-tmp_path: '<Path to auc tmp dir>' (Defaut False)
+tmp_path: '<Path to auc tmp dir>' (Default /tmp)
+update_on_start: True (Default True)
 ```
