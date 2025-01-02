@@ -36,8 +36,8 @@ def check_network(ping_addr):
 
 def run_daemon(args, logger):
     config = AucConfig(args.config, logger)
-    Path(config.log_path).mkdir(exist_ok=True, parents=True)
     if config.file_log:
+        Path(config.log_path).mkdir(exist_ok=True, parents=True)
         logger.addHandler(logging.FileHandler(f'{config.log_path}/auc_{datetime.today().strftime("%Y-%m-%d")}.log'))
     yay = config.use_yay
     logger.info('Starting AUC daemon')
