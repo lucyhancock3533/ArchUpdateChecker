@@ -14,7 +14,7 @@ urllib3 = "^2.3.0"
 pygobject = "^3.50.0"
 
 [tool.poetry.scripts]
-aucp = "auc.prompt.main:run"
+aucp = "aucp.auc.prompt.main:run"
 
 [build-system]
 requires = ["poetry-core"]
